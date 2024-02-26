@@ -1,0 +1,42 @@
+O(n) where n is key length
+
+class Solution{
+  public:
+  bool isEmpty(trie_node_t* root)
+    {
+        for (int i = 0; i < 26; i++)
+            if (root->children[i])
+                return false;
+        return true;
+    }
+  trie_node_t* delete_(trie_node_t *root, char key[], int n, int ind)
+    {
+        if(!root)
+            return NULL;
+        if(ind == n)
+        {
+            if (root->value==1)
+                root->value = 0;
+            if (isEmpty(root)) 
+            {
+                delete (root);
+                root = NULL;
+            }
+            return root;
+        }
+        int index = key[ind] - 'a';
+        root->children[index] = delete_(root->children[index], key, n, ind + 1);
+        if (isEmpty(root) && root->value == 0) 
+        {
+            delete (root);
+            root = NULL;
+        }
+        return root;
+    }
+  void deleteKey(trie_node_t *root, char key[])
+  {
+    //Code here
+    int n = strlen(key);
+    root = delete_(root,key,n,0);
+  }
+};

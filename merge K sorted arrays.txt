@@ -1,0 +1,29 @@
+class Solution
+{
+    public:
+    //Function to merge k sorted arrays.
+    struct Comparator{
+        bool operator()(pair<pair<int,int>,int> a, pair<pair<int,int>,int> b){
+            return a.second>b.second;
+        }
+    };
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
+    {
+        //code here
+        priority_queue<pair<pair<int,int>,int>,vector<pair<pair<int,int>,int>>,Comparator> pq;
+        vector<int> v;
+        for(int i=0;i<arr.size();i++)
+            pq.push({{i,0},arr[i][0]});
+        while(!pq.empty())
+        {
+            pair<pair<int,int>,int> temp = pq.top();
+            pq.pop();
+            v.push_back(temp.second);
+            pair<int,int> index = temp.first;
+            if(index.second+1 < arr[index.first].size())
+                pq.push({{index.first,index.second+1},arr[index.first][index.second+1]});
+        }
+        // v.push_back(1);
+        return v;
+    }
+};

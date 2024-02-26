@@ -1,0 +1,67 @@
+The director of your college is planning to send 2 people to the ICPC regionals. He wants them to be from different branches. You will be given a list of pairs of student ids. Each pair is made of students from the same branch. Determine how many pairs of students from different branches they can choose from
+
+
+COmplexity - O(n)
+
+Solution - Initially if everyone is in different class the total number of possible handshakes will be n(n-1)/2
+
+We also keep track of how many students are there in one class using rank array
+
+we make union of given pair
+1. if both are alredy in same class then ignore
+2. if both are in different class find their parents
+   say 1->parent1 and 2->parent2
+   make parent[paret1] = parent2
+        rank[parent2]+=1
+	so that there is one global leader for every class and its corresponding rank will be number of students in that class
+
+now possible pairs in a class (for rank which are not 1) will be j*(j-1)/2
+we add all such ranks and subtract it from n(n-1)/2
+   
+
+
+class Solution {
+    public:
+        int findParent(vector<int> &parent, int i)
+        {
+            int original_i = i;
+            while(parent[i] != i)
+                i = parent[i];
+            parent[original_i] = i;
+            return i;
+        }
+        void Union(vector<int> &parent, vector<int> &rank, int x, int y)
+        {
+            int parent_x = findParent(parent,x);
+            int parent_y = findParent(parent,y);
+            if(parent_x == parent_y)
+                return;
+            rank[parent_y] = rank[parent_y] + rank[parent_x];
+            parent[parent_x] = parent_y;
+        }
+        long long int numberOfPairs(vector<vector<int>> &pairs,int p,int n)
+        {
+            // code here
+            vector<int> parent, rank;
+            for(int i=0;i<n;i++)
+            {
+                parent.push_back(i);
+                rank.push_back(1);
+            }
+            for(int i=0;i<p;i++)
+                Union(parent, rank, pairs[i][0], pairs[i][1]);
+                
+            vector <long long int> ans;
+            for(int i=0;i<n;i++)
+            {
+                if(parent[i]==i)
+                    ans.push_back(rank[i]);
+            }
+            long long int n1 = n;
+            long long int fans=((n1*n1)-n1)/2;
+            long long int tans=0;
+            for(auto j:ans)
+                tans+=((j*j)-j)/2;
+            return fans-tans;
+        }
+};

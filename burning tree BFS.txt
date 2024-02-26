@@ -1,0 +1,110 @@
+// burning tree bfs method
+
+if target node is found push its children to queue and return 1
+
+repeat recursively for left and right tree
+if found in left, current elements in queue are next to burn so rmeove them and add their children to queue
+add right child to queue
+
+similarly repeat the process for right subtree
+
+
+class Solution {
+  public:
+int maxDepth(Node* root)
+  {
+      if(root==NULL)return 0;
+      return 1 + max(maxDepth(root->left),maxDepth(root->right));
+  }
+  
+  int burning(Node* root,int tar, queue<Node*> &q, vector<vector<int>> &v)
+  {
+      if(root==NULL)return 0;
+      
+      if(root->data==tar)
+      {
+           vector<int> temp;
+           temp.push_back(root->data);
+           v.push_back(temp);
+           if(root->left!=NULL)
+                q.push(root->left);
+            if(root->right!=NULL)
+                q.push(root->right);
+           return 1;
+      }
+      int a = burning(root->left, tar, q , v);
+      if(a==1)
+      {
+          int size = q.size();
+          vector<int> temp;
+          while(size--)
+          {
+              Node *node = q.front();
+              q.pop();
+              temp.push_back(node->data);
+              if(node->left)
+                    q.push(node->left);
+                if(node->right)
+                    q.push(node->right);
+          }
+          if(root->right)
+                q.push(root->right);
+            temp.push_back(root->data);
+            v.push_back(temp);
+            return 1;
+      }
+      int b = burning(root->right, tar, q , v);
+      if(b==1)
+      {
+          int size = q.size();
+          vector<int> temp;
+          while(size--)
+          {
+              Node *node = q.front();
+              q.pop();
+              temp.push_back(node->data);
+              if(node->left)
+                    q.push(node->left);
+                if(node->right)
+                    q.push(node->right);
+          }
+          if(root->left)
+                q.push(root->left);
+            temp.push_back(root->data);
+            v.push_back(temp);
+            return 1;
+      }
+      
+      return 0;
+  }
+    int minTime(Node* root, int target) 
+    {
+        queue<Node*> q;
+        vector<vector<int>> v;
+        burning(root,target,q,v);
+        while(!q.empty())
+        {
+            int size = q.size();
+            vector<int> temp;
+            while(size--)
+            {
+                Node *node = q.front();
+                q.pop();
+                if(node->left)
+                    q.push(node->left);
+                if(node->right)
+                    q.push(node->right);
+                temp.push_back(node->data);
+            }
+            v.push_back(temp);
+        }
+        // for(int i=0;i<v.size();i++)
+        // {
+        //     for(int j=0;j<v[i].size();j++)
+        //         cout<<v[i][j]<<" ";
+        //     cout<<endl;
+        // }
+        return v.size()-1;
+        
+    }
+};

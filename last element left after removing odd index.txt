@@ -1,0 +1,21 @@
+Given an array of length N, starting from 1 to N. At each iteration, you remove all elements at odd positions, until only one element is left. Find the last remaining element.
+
+
+Input:
+N = 5
+Output:
+4
+Explanation:
+Initial Array- {1,2,3,4,5}.
+After 1st Iteration- {2,4}.
+After 2nd Interation- {4}
+Threfore, the answer is 4.
+
+
+class Solution {
+  public:
+    long long oddGame(long long N) {
+        // code here
+        return pow(2,floor(log10(N)/log10(2)));
+    }
+};

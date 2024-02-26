@@ -1,0 +1,141 @@
+LRU cache implementation
+1. get(key) returns value of key if key is present in cache else return -1
+   since get(x) causes (key,value) to be most recently used, it is brough to fron of the memory
+2. set(key, val)
+   a. if key  spresent in cache, set its previos value to currently passed value
+      also bring this (key,updated_value) to the front of the memory
+   b. if key is not present then:
+	i. if memory is not full, insert (key,value) in front of the memory
+	ii. delete last (key,value) pair from memory as it was used least (in set and get) and insert new (key,value) pair in front of memory
+\\ method 2 
+use map pointing key to address of value in a doubly linked list
+efficient as search in list now only takes O(1) time as address is already stored in map
+class LRUCache
+{
+    private:
+        int cap;
+        unordered_map<int, list<pair<int, int>>::iterator> mp;
+        list<pair<int,int>> v;
+        
+    public:
+    //Constructor for initializing the cache capacity with the given value.
+    LRUCache(int cache_cap)
+    {
+        // code here
+        cap = cache_cap;
+        mp.clear();
+        v.clear();
+    }
+    
+    //Function to return value corresponding to the key.
+    int get(int key)
+    {
+        // your code here
+        if(mp.empty())
+            return -1;
+        if (mp.find(key)==mp.end())
+            return -1;
+        else
+        {
+            auto it = mp[key];
+            int val = it->second;
+            v.erase(it);
+            v.push_front({key,val});
+            
+            it = v.begin();
+            mp[key] = it;
+            return val;
+        }
+        
+    }
+    
+    //Function for storing key-value pair.
+    void set(int key, int value)
+    {
+        // your code here   
+        if(mp.find(key)!=mp.end())
+        {
+            auto it = mp[key];
+            v.erase(it);
+        }
+        else if (mp.size() >= cap)
+        {
+            int key_to_delete = v.back().first;
+            mp.erase(key_to_delete);
+            v.pop_back();
+        }
+        v.push_front({key,value});
+        auto it = v.begin();
+        mp[key] = it;
+            
+    }
+};
+
+\\ method 1
+using vectors
+inefficient as always have to search value in vector
+so o(n) time 
+class LRUCache
+{
+    private:
+        int cap;
+        unordered_map<int,int> mp;
+        list<int> v;
+        
+    public:
+    //Constructor for initializing the cache capacity with the given value.
+    LRUCache(int cache_cap)
+    {
+        // code here
+        cap = cache_cap;
+        mp.clear();
+        v.clear();
+    }
+    
+    //Function to return value corresponding to the key.
+    int get(int key)
+    {
+        // your code here
+        if(mp.empty())
+            return -1;
+        if (mp.find(key)==mp.end())
+            return -1;
+        else
+        {
+            v.remove(key);
+            v.push_front(key);
+            return mp[key];
+        }
+        
+    }
+    
+    //Function for storing key-value pair.
+    void set(int key, int value)
+    {
+        // your code here   
+        if(mp.empty())
+        {
+            mp[key] = value;
+            v.push_front(key);   
+        }
+        else if (mp.find(key)==mp.end())
+        {
+            if(mp.size() >= cap)
+            {
+                int key_to_delete = v.back();
+                mp.erase(key_to_delete);
+                v.pop_back();
+            }
+            mp[key] = value;
+            v.push_front(key);
+        }
+        else if (mp.find(key)!=mp.end())
+        {
+            v.remove(key);
+            v.push_front(key);
+            mp[key] = value;
+        }
+            
+    }
+};
+

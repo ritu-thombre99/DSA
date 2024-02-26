@@ -1,0 +1,34 @@
+class Solution:
+    
+    #Function to merge two nodes a and b.
+    def union_(self,a,b,par,rank1):
+        # code here
+        parA, parB = par[a], par[b]
+        while(par[parA]!=parA):
+            parA = par[parA]
+        while(par[parB]!=parB):
+            parB = par[parB]
+        if(parA == parB):
+            return
+        if(rank1[parA] == rank1[parB]):
+            par[parB] = parA
+            rank1[parA] = rank1[parA] + 1
+        elif(rank1[parA] < rank1[parB]):
+            par[parA] = parB
+        else:
+            par[parB] = parA
+        # print(par[1:],rank1[1:])
+        
+    #Function to check whether 2 nodes are connected or not.
+    def isConnected(self,x,y,par,rank1):
+        # code here
+        parentX = par[x]
+        parentY = par[y]
+        while(par[parentX] != parentX):
+            parentX = par[parentX]
+        while(par[parentY] != parentY):
+            parentY = par[parentY]
+        if(parentX != parentY):
+            return False
+        return True
+        

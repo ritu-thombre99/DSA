@@ -1,0 +1,141 @@
+find k largest element (from unsorted array)
+
+Method 1. Bubble sort with outer loop k - O(nk)
+Method 2. Sort array using quick/merge sort and return top k elements - O(nlogn)
+Method 3- Max heap. Make heap for guven array and pop top k elements 
+	  heapify - O(n)
+	  pop k times - klog(n) 
+          therefore O(n+klogn)
+
+class Solution{
+public:	
+	vector<int> kLargest(int arr[], int n, int k) {
+	    // code here
+	    priority_queue<int> q;
+	    for(int i=0;i<n;i++)
+	        q.push(arr[i]);
+        vector<int> v;
+        while(!q.empty() && k--)
+        {
+            v.push_back(q.top());
+            q.pop();
+        }
+        return v;
+	}
+
+};
+
+Method 4 - Partitioning+sorting
+
+Repeat partition until partition index equals k - 0(n)
+then sort the last k elements - 0(klogk)
+hencr 0(n+klogk)
+
+class Solution{
+public:	
+    int findPivot(int a[], int start, int end)
+    {
+        int pivot = a[end];
+        int pIndex = start;
+        for (int i = start; i < end; i++) 
+        {
+            if (a[i] <= pivot) 
+            {
+                int temp = a[i];
+                a[i] = a[pIndex];
+                a[pIndex] = temp;
+                pIndex++;
+            }
+        }
+        int temp = a[end];
+        a[end] = a[pIndex];
+        a[pIndex] = temp;
+        return pIndex;
+    }
+    void SmallestLargest(int a[], int low, int high, int k, int n, vector<int> &v)
+    {
+        if (low == high)
+            return;
+        else {
+            int pivotIndex = findPivot(a, low, high);
+     
+            if (k == pivotIndex) 
+            {
+                for (int i = (n - pivotIndex); i < n; i++)
+                    v.push_back(a[i]);
+            }
+     
+            else if (k < pivotIndex)
+                SmallestLargest(a, low, pivotIndex - 1, k, n, v);
+     
+            else if (k > pivotIndex)
+                SmallestLargest(a, pivotIndex + 1, high, k, n, v);
+        }
+    }
+	vector<int> kLargest(int arr[], int n, int k) {
+	    // code here
+	    vector<int> v;
+	    if (k==n)
+	    {
+	        sort(arr,arr+n);
+	        for(int i=0;i<n;i++)
+	            v.insert(v.begin(),arr[i]);
+            return v;
+	        
+	    }
+	    SmallestLargest(arr, 0, n-1, k, n, v);
+	    sort(v.begin(),v.end(),greater<int>());
+	   
+        return v;
+	}
+
+};
+
+\\ Method 4 - min heap
+1) Build a Min Heap MH of the first k elements (arr[0] to arr[k-1]) of the given array. O(k*log(k))
+2) For each element, after the kth element (arr[k] to arr[n-1]), compare it with root of MH. 
+……a) If the element is greater than the root then make it root and call heapify for MH 
+……b) Else ignore it. 
+// The step 2 is O((n-k)*log(k))
+3) Finally, MH has k largest elements, and the root of the MH is the kth largest element.
+Time Complexity: O(k*log(k) + (n-k)*log(k)) without sorted output. If sorted output is needed then O(k*log(k) + (n-k)*log(k) + k*log(k)) so overall it is O(k*log(k) + (n-k)*log(k))
+
+void heapify(vector<int> &heap,int i)
+    {
+        int smallest = i;
+        int left = 2*i+1;
+        int right = 2*i+2;
+        if(left<heap.size() && heap[left]<heap[smallest])
+            smallest = left;
+        if(right<heap.size() && heap[right]<heap[smallest])
+            smallest = right;
+        if(smallest != i)
+        {
+            int temp = heap[i];
+            heap[i] = heap[smallest];
+            heap[smallest] = temp;
+            heapify(heap,smallest);
+        }
+    }
+	vector<int> kLargest(int arr[], int n, int k) {
+	    // code here
+	    vector<int> heap;
+	    for(int i=0;i<k;i++)
+	        heap.push_back(arr[i]);
+        for(int i=(k/2)-1;i>=0;i--)
+            heapify(heap,i);
+        for(int i=k;i<n;i++)
+        {
+            if(heap[0] > arr[i])
+                continue;
+            else
+            {
+                heap[0] = arr[i];
+                heapify(heap,0);
+            }
+        }
+        sort(heap.begin(),heap.end(),greater<int>());
+        return heap;
+	}
+
+};

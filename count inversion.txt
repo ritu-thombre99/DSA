@@ -1,0 +1,43 @@
+long long int merge(long long arr[], long long int start, long long mid, long long end, long long temp[])
+{
+    long long int inversion = 0;
+    long long i = start;
+    long long j = mid;
+    long long k = start;
+    while(i<mid && j<=end)
+    {
+        if(arr[i] <= arr[j])
+            temp[k++] = arr[i++];
+        else
+        {
+            temp[k++] = arr[j++];
+            inversion = inversion + (mid-i);
+        }
+    }
+    while(i<mid)
+        temp[k++] = arr[i++];
+    while(j<=end)
+        temp[k++] = arr[j++];
+    for(i=start;i<=end;i++)
+        arr[i] = temp[i];
+    return inversion;
+}
+long long int mergeSort(long long arr[], long long start, long long end, long long temp[])
+{
+    long long int inversion = 0;
+    if(start < end)
+    {
+        long long mid = (start+end)/2;
+        inversion += mergeSort(arr,start,mid, temp);
+        inversion += mergeSort(arr,mid+1,end, temp);
+        inversion += merge(arr, start, mid+1, end, temp);
+    }
+    return inversion;
+}
+long long int inversionCount(long long arr[], long long N)
+{
+    // Your Code Here
+    long long temp[N];
+    long long int inversion = mergeSort(arr,0,N-1,temp);
+    return inversion;
+}

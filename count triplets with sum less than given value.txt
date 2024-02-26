@@ -1,0 +1,31 @@
+class Solution{
+	
+	public:
+	long long countTriplets(long long arr[], int n, long long sum)
+	{
+	    // Your code goes here
+	    sort(arr,arr+n);
+	    long long count = 0;
+	    for(int i=0;i<n-2;i++)
+	    {
+	        int low = i+1;
+	        int high = n-1;
+	        while(low<high)
+	        {
+	            if(arr[i]+arr[low]+arr[high] < sum)
+	            {
+	                // This is important. For current i and j, there
+                    // can be total k-j third elements
+                    // arr[low],arr[low+1].....arr[high] all wil sum to x-arr[i]
+	                count += (high-low);
+	                low = low+1;
+	            }
+	            else
+	                high = high-1;
+	        }
+	    }
+	    return count;
+	}
+		 
+
+};

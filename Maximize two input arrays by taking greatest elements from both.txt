@@ -1,0 +1,53 @@
+Given two integer arrays Arr1 and Arr2 of size N. Use the greatest elements from the given arrays to create a new array of size N such that it consists of only unique elements and the sum of all its elements is maximum.
+The created elements should contain the elements of Arr2 followed by elements of Arr1 in order of their appearance.
+
+
+Complexity - insertion takes logN which we are repeating 2N times therefore 2Nlog2N
+which is O(NlogN)
+All elements of both arrays are inserted into array (in ascending order which is property of set)
+
+then remove elements unless size of set becomes N (this also takes NlogN as removal takes logN repeated N times)
+
+Now we have all the elements required but we need to put it in order they appear in both arrays
+
+So find if there are arr2 elements in set and append them to answer vector
+similarly for arr1
+this also takes NlogN
+as searching takes logN which is repeated 2N times (for all elements from arr1 and arr2)
+
+class Solution {
+public:
+    vector<int> maximizeArray(int arr1[], int arr2[], int n) {
+            // code here 
+        vector<int> ans;
+        set<int>s;
+        for(int i=0;i<n;i++)
+        {
+            s.insert(arr2[i]);
+            s.insert(arr1[i]);
+        }
+        while(s.size()>n)
+            s.erase(*s.begin());
+        for(int i=0;i<n;i++)
+        {
+            auto it=s.find(arr2[i]);
+            if(it!=s.end())
+            {
+                ans.push_back(arr2[i]);
+                s.erase(arr2[i]);
+            }
+              
+        }
+        for(int i=0;i<n;i++)
+        { 
+            auto it=s.find(arr1[i]);
+            if(it!=s.end())
+            {
+            ans.push_back(arr1[i]);
+            s.erase(arr1[i]);
+            }
+              
+        }
+        return ans;
+    }
+};

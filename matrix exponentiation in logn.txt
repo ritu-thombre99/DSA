@@ -1,0 +1,49 @@
+class Solution {
+public:
+#define MOD 1000000007
+    void multiply(long long a[2][2], long long b[2][2])
+    {
+        long long mul[2][2];
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                mul[i][j] = 0;
+                for (int k = 0; k < 2; k++)
+                    mul[i][j] += (a[i][k]*b[k][j])%MOD;
+            }
+        }
+        for(int i=0;i<2;i++)
+            for(int j=0;j<2;j++)
+                a[i][j] = mul[i][j];
+        
+    }
+    void mat_power(long long mat[2][2], long long F[2][2], long long int power)
+    {
+        if(power == 0)
+        {
+            mat[0][0] = mat[1][1] = 1;
+            mat[1][0] = mat[0][1] = 0;
+            return;
+        }
+        else if(power == 1)
+        {
+            for(int i=0;i<2;i++)
+                for(int j=0;j<2;j++)
+                    mat[i][j] = F[i][j];
+            return;
+        }
+        mat_power(mat,F,power/2);
+        multiply(mat,mat);
+        if(power%2 == 1)
+            multiply(mat,F);
+    }
+    int FindNthTerm(long long int n) {
+        // Code here
+        long long F[2][2] = {{1,1}, {1,0}};
+        long long M[2][2] = {{1,1}, {1,0}};
+    
+        mat_power(M,F,n-1);
+        return (M[0][0]%MOD+M[0][1]%MOD)%MOD;
+    }
+};

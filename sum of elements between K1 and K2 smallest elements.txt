@@ -1,0 +1,30 @@
+class Solution{
+    public:
+    long long sumBetweenTwoKth( long long A[], long long N, long long K1, long long K2)
+    {
+	Method 1- sorting 0(nlogn)
+        // Your code goes here
+        // sort(A,A+N);
+        // long long sum = 0;
+        // for(long long i=0;i<N;i++)
+        //     if(A[i]<A[K2-1] && A[i]>A[K1-1])
+        //         sum+=A[i];
+        // return sum;
+	
+	//method 2 min heap 
+	O((k2-k1)*log(n)) 
+        priority_queue<long long,vector<long long>,greater<long long>> pq;
+        for(long long i=0;i<N;i++)
+            pq.push(A[i]);
+        long long K3 = K2-K1-1;
+        while(K1--)
+            pq.pop();
+        long long sum = 0;
+        while(K3--)
+        {
+            sum = sum + pq.top();
+            pq.pop();
+        }
+        return sum;
+    }
+};
