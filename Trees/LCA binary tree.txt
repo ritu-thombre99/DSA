@@ -1,0 +1,15 @@
+Node *LCA(Node *root, int first, int second)
+    {
+        if(!root)
+            return NULL;
+        if(root->data == first || root->data == second)
+            return root;
+        Node *left = LCA(root->left, first, second);
+        Node *right = LCA(root->right, first, second);
+        if(left && right)
+            return root;
+        if(left && !right)
+            return left;
+        if(right && !left)
+            return right;
+    }

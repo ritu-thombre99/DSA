@@ -1,0 +1,28 @@
+class Solution{
+    public:
+    int search(int arr[], int x, int start, int end)
+    {
+        for(int i=start;i<=end;i++)
+            if(arr[i] == x)
+                return i;
+        return -1;
+    }
+    Node* util(int in[], int pre[], int in_start, int in_end, int n, int &pre_index)
+    {
+        if(pre_index >= n || in_start > in_end)
+            return NULL;
+        Node *root = new Node(pre[pre_index++]);
+        int mid_index = search(in, root->data, in_start, in_end);
+        root->left = util(in, pre, in_start, mid_index-1, n, pre_index);
+        root->right = util(in, pre, mid_index+1, in_end, n, pre_index);
+        return root;
+
+    }
+    Node* buildTree(int in[],int pre[], int n)
+    {
+        // Code here
+        int pre_index = 0;
+        Node *root = util(in,pre,0,n-1, n, pre_index);
+        return root;
+    }
+};

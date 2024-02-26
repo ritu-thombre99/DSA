@@ -1,0 +1,67 @@
+\\ optimised solution
+class Solution
+{
+    public:
+    //Function to check whether a Binary Tree is BST or not.
+    bool util(Node *root, int upper_bound, int lower_bound)
+    {
+        if(!root)
+            return true;
+        if(root->data > upper_bound || root->data < lower_bound)
+            return false;
+        bool a = util(root->left, root->data, lower_bound);
+        bool b = util(root->right, upper_bound, root->data);
+        return (a&&b);
+    }
+    bool isBST(Node* root) 
+    {
+        // Your code here
+        if (root == NULL)
+            return true;
+        return util(root,INT_MAX,INT_MIN);
+    }
+};
+
+\\ check is binary tree is bst
+
+class Solution
+{
+    public:
+    //Function to check whether a Binary Tree is BST or not.
+    void check_left(Node *root, int root_val, bool *is_bst)
+    {
+        if (root == NULL)
+            return;
+        check_left(root->left, root_val, is_bst);
+        if (*is_bst && root->data >= root_val)
+            *is_bst = false;
+        check_left(root->right, root_val, is_bst);
+    }
+    void check_right(Node *root, int root_val, bool *is_bst)
+    {
+        if (root == NULL)
+            return;
+        check_right(root->left, root_val, is_bst);
+        if (*is_bst && root->data <= root_val)
+            *is_bst = false;
+        check_right(root->right, root_val, is_bst);
+    }
+    bool isBST(Node* root) 
+    {
+        // Your code here
+        if (root == NULL)
+            return true;
+        isBST(root->left);
+        bool is_bst = true;
+        check_left(root->left, root->data, &is_bst);
+        if (is_bst == true)
+            check_right(root->right, root->data,  &is_bst);
+        if (is_bst == true)
+            return true;
+        else
+            return false;
+        
+        isBST(root->right);  
+        
+    }
+};

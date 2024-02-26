@@ -1,0 +1,94 @@
+// inefficient but worked
+void inOrder(Node *root, vector<int> &v)
+{
+    if(!root)
+        return;
+    inOrder(root->left,v);
+    v.push_back(root->data);
+    inOrder(root->right,v);
+}
+
+int pairsViolatingBST(Node *root,int n){
+          /*Your code here */
+    vector<int> arr;
+    inOrder(root,arr);
+    int count = 0;
+    for(int i=0;i<arr.size();i++)
+        for(int j=i+1;j<arr.size();j++)
+            if(arr[j] < arr[i])
+                count = count + 1;
+    return count;
+}
+O(n^2)
+
+\\ efficient but didnt work
+
+O(nlogn)
+
+int merge(vector<int> arr, int start, int mid, int end)
+{
+    vector<int> temp;
+    int inversion = 0;
+    int i = start;
+    int j = mid;
+    while(i<mid && j<=end)
+    {
+        if(arr[i] <= arr[j])
+        {
+            temp.push_back(arr[i]);
+            i = i + 1;
+        }
+        else
+        {
+            temp.push_back(arr[j]);
+            j = j + 1;
+            inversion = inversion + (mid-i);
+        }
+    }
+    while(i<mid)
+    {
+        temp.push_back(arr[i]);
+        i = i + 1;
+    }
+    while(j<=end)
+    {
+        temp.push_back(arr[j]);
+        j = j + 1;
+    }
+    j=0;
+    for(i=start;i<=end;i++)
+    {
+        arr[i] = temp[j];
+        j=j+1;
+    }
+    return inversion;
+}
+int mergeSort(vector<int> arr, int start, int end)
+{
+    int inversion = 0;
+    if(start < end)
+    {
+        int mid = (start+end)/2;
+        inversion += mergeSort(arr,start,mid);
+        inversion += mergeSort(arr,mid+1,end);
+        inversion += merge(arr, start, mid+1, end);
+    }
+    return inversion;
+}
+void inOrder(Node *root, vector<int> &v)
+{
+    if(!root)
+        return;
+    inOrder(root->left,v);
+    v.push_back(root->data);
+    inOrder(root->right,v);
+}
+int pairsViolatingBST(Node *root,int n){
+          /*Your code here */
+    vector<int> arr;
+    inOrder(root,arr);
+    int inversion = mergeSort(arr,0,arr.size()-1);
+    // return 1;
+    return inversion;
+}
+

@@ -1,0 +1,82 @@
+class Solution{
+  public:
+    // function should return the number of turns required to go from first node to second node
+    Node *LCA(Node *root, int first, int second)
+    {
+        if(!root)
+            return NULL;
+        if(root->data == first || root->data == second)
+            return root;
+        Node *left = LCA(root->left, first, second);
+        Node *right = LCA(root->right, first, second);
+        if(left && right)
+            return root;
+        if(left && !right)
+            return left;
+        if(right && !left)
+            return right;
+    }
+    void util(Node *root, char dir, int x, 
+                vector<char> dir_path, vector<char> &final_dir_path)
+    {
+        if(!root)
+            return;
+        dir_path.push_back(dir);
+        if(root->data == x)
+        {
+            final_dir_path = dir_path;
+            return;
+        }
+        util(root->left,'L',x, dir_path, final_dir_path);
+        util(root->right,'R',x, dir_path, final_dir_path);
+    }
+    int NumberOFTurns(struct Node* root, int first, int second)
+    {
+      // Your code goes here
+        Node *root_lca = LCA(root, first, second);
+        vector<char> dir_path1, dir_path2, temp_dir;
+        util(root_lca,'N',first, temp_dir, dir_path1);
+        temp_dir.clear();
+        util(root_lca,'N',second, temp_dir, dir_path2);
+        dir_path1.erase(dir_path1.begin());
+        dir_path2.erase(dir_path2.begin());
+        int turns = 0;
+        if(dir_path1.empty() && dir_path2.empty())
+            return -1;
+        else if(!dir_path1.empty() && dir_path2.empty())
+        {
+            for(int i=0;i<dir_path1.size()-1;i++)
+            { 
+                if(dir_path1[i] != dir_path1[i+1])
+                    turns = turns + 1;
+            }
+            if(turns==0)
+                return -1;
+            return turns;
+        }
+        else if(dir_path1.empty() && !dir_path2.empty())
+        {
+            for(int i=0;i<dir_path2.size()-1;i++)
+            { 
+                if(dir_path2[i] != dir_path2[i+1])
+                    turns = turns + 1;
+            }
+            if(turns==0)
+                return -1;
+            return turns;
+        }
+        
+        for(int i=0;i<dir_path1.size()-1;i++)
+        { 
+            if(dir_path1[i] != dir_path1[i+1])
+                turns = turns + 1;
+        }
+        for(int i=0;i<dir_path2.size();i++)
+        {
+            if(dir_path2[i] != dir_path2[i+1])
+                turns = turns + 1;
+        }
+            
+        return turns+1;
+    }
+};

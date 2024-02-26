@@ -1,0 +1,44 @@
+Given a binary tree, the task is to print the maximum sum of nodes of a sub-tree which is also a Binary Search Tree.
+
+We use extra structure Info for every node which stores minimum, maximum, sum of that node and also tells if that node is BST and global maximum
+
+struct Info
+{
+	int max;
+	int min;
+	bool is_bst;
+	int sum;
+	int curr_max;
+};
+Info MaxSumBSTUtil(Node *root, int &maxsum)
+{
+	if(!root)
+		return {INT_MIN,INT_MAX,true,0,0};
+	if(!root->left && !root->right)
+	{
+		maxsum = max(maxsum, root->data);
+		return {root->data, root->data, true, root->data,maxsum};
+	}
+	Info L = MaxSumBSTUtil(root->left,maxsum);
+	Info R = MaxSumBSTUtil(root->right,maxsum);
+	Info Curr;
+	if(L.max<root->data && R.min>root->data && L.is_bst && R.is_bst)
+	{
+		Curr.is_bst = true;
+		Curr.max = max(root->data,max(L.max,R.max));
+		Curr.min = min(root->data,min(L.min,R.min));
+		Curr.sum = L.sum+root->data+R.sum;
+		Curr.curr_max = max(Curr.sum, maxsum);
+		maxsum = max(maxsum, Curr.curr_max);
+		return Curr;
+	}
+	Curr.is_bst = false;
+	Curr.sum = L.sum+root->data+R.sum;
+	Curr.curr_max = maxsum;
+	return Curr;
+}
+int MaxSumBST(Node *root)
+{
+	int max_sum = INT_MIN;
+	return (MaxSumBSTUtil(root, max_sum)).curr_max;
+}

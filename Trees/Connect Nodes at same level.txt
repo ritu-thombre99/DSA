@@ -1,0 +1,120 @@
+Method 1 - inefficient
+requires extra space
+level order traverse tree using queue
+use hash map to map level -> list of nodes at that level
+tarverse vectors of every level in map and connect i->i+1
+
+class Solution
+{
+public:
+    //Function to connect nodes at same level.
+    void connect(Node *root)
+    {
+    // Your Code Here
+        queue<pair<int,Node*>> q;
+        map<int,vector<Node*>> m;
+        q.push(make_pair(0,root));
+        while(!q.empty())
+        {
+            pair<int,Node*> temp = q.front();
+            q.pop();
+            int level = temp.first;
+            Node *node = temp.second;
+            if(node)
+                m[level].push_back(node);
+            if(node && node->left)
+                q.push(make_pair(level+1,node->left));
+            if(node && node->right)
+                q.push(make_pair(level+1,node->right));
+        }
+        for(auto itr=m.begin();itr!=m.end();itr++)
+        {
+            vector<Node*> temp = itr->second;
+            for(int i=0;i<temp.size()-1;i++)
+                temp[i]->nextRight = temp[i+1];
+        }
+    }    
+  
+};
+
+Method 2 - without map
+class Solution
+{
+public:
+    //Function to connect nodes at same level.
+    void connect(Node *root)
+    {
+    // Your Code Here
+        queue<Node*> q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size = q.size();
+	    Node *prev = NULL;
+	    while(size--)
+	    {
+		Node *node = q.front();
+		q.pop();
+		if(node->left)
+			q.push(node->left);
+		if(node->right)
+			q.push(node->right);
+		if(prev)
+			prev->nextRight = node;
+		prev = node;
+            }
+	    prev->nextRight = NULL;        
+	}
+    }    
+  
+};
+
+
+Method 3 - With constant extra space
+
+connect node at the same level first using nextRight
+
+Node* getNextRight(Node *node)
+{
+	Node *temp = node->nextRight;
+	while(temp)
+	{
+		if(temp->left)
+			return temp->left;
+		if(temp->right)
+			return temp->right;
+		temp = temp->nextRight;
+	}
+	return NULL;
+}
+void connect(Node *root)
+{
+	if(!root)
+		return;
+	root->nextRight = NULL;
+	Node *p = root;
+	while(p)
+	{
+		Node *q = p;
+		while(q)
+		{
+			if(q->left)
+			{
+				if(q->right)
+					q->left->nextRight = q->right;
+				else
+					q->left->nextRight = getNextRight(q);
+			}
+			if(q->right)
+				q->right->nextRight = getNextRight(q);
+			q = q->nextRight;
+		}
+		if(p->left)
+			p = p->left;
+		else if(p->right)
+			p = p->right;
+		else
+			p = getNextRight(p);
+		
+	}
+}

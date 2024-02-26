@@ -1,0 +1,58 @@
+class Solution{
+  public:
+    TNode* sortedListToBST(LNode *head) {
+        //code here
+        if(!head)
+            return NULL;
+        if(head->next == NULL)
+        {
+            TNode *node = new TNode(head->data);
+            return node;
+        }
+        LNode *prev = NULL;
+        LNode *ptr1 = head;
+        LNode *ptr2 = head;
+        while(ptr2 && ptr2->next)
+        {
+            prev = ptr1;
+            ptr1=ptr1->next;
+            ptr2=ptr2->next->next;
+        }
+        prev->next = NULL;
+        TNode *root = new TNode(ptr1->data);
+        root->left = sortedListToBST(head);
+        root->right = sortedListToBST(ptr1->next);
+        return root;
+    }
+};
+
+
+Optimize
+TNode* sortedListToBST(LNode *head) 
+{ 
+    int n = countLNodes(head); 
+    return sortedListToBSTRecur(&head, n); 
+} 
+
+TNode* sortedListToBSTRecur(LNode **head_ref, int n) 
+{ 
+    if (n <= 0) 	
+	return NULL;
+    TNode *left = sortedListToBSTRecur(head_ref, n/2); 
+    TNode *root = new TNode((*head_ref)->data); 
+    root->left = left; 
+    *head_ref = (*head_ref)->next; 
+    root->right = sortedListToBSTRecur(head_ref, n - n / 2 - 1); 
+    return root; 
+} 
+int countLNodes(LNode *head) 
+{ 
+    int count = 0; 
+    LNode *temp = head; 
+    while(temp) 
+    { 
+        temp = temp->next; 
+        count++; 
+    } 
+    return count; 
+} 

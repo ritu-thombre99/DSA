@@ -1,0 +1,23 @@
+class Solution
+{
+    public:
+    void flatten(Node *root)
+    {
+        //code here
+        if(!root)
+            return;
+        if(root->left)
+        {
+            Node *left = root->left;
+            while(left->right != NULL)
+                left = left->right;
+            left->right = root->right;
+            root->right = root->left;
+            root->left = NULL;
+        }
+        flatten(root->left);
+        flatten(root->right);
+        
+        
+    }
+};

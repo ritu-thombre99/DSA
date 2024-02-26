@@ -1,0 +1,27 @@
+
+class Solution
+{
+    public:
+    int tree_sum(struct Node *root)
+    {
+        if (!root)
+            return 0;
+        return (root->data+tree_sum(root->left)+tree_sum(root->right));
+    }
+    void util(struct Node *root, int *sum)
+    {
+        if(!root)
+            return;
+        util(root->left, sum);
+        *sum = *sum - (root->data);
+        root->data = *sum;
+        util(root->right, sum);
+    }
+    void transformTree(struct Node *root)
+    {
+        //code here
+        int sum = tree_sum(root);
+        util(root,&sum);
+    
+    }
+};

@@ -1,0 +1,30 @@
+to check if preorder is bst or not
+we keep finding root (by popping all left elements)
+then we only have right subtree left so we check if there is any element smaller than current root
+
+class Solution {
+  public:
+
+    int canRepresentBST(int pre[], int n) {
+        // code here
+        stack<int> s;
+        int root = INT_MIN;
+    
+        for (int i=0; i<n; i++)
+        {
+	    // check if right subtree has element smaller than root
+            if (pre[i] < root)
+                return false;
+    
+            while (!s.empty() && s.top()<pre[i])
+            {
+                root = s.top();
+                s.pop();
+            }
+            s.push(pre[i]);
+        }
+        return true;
+        
+    }
+};
+

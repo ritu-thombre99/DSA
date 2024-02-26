@@ -1,0 +1,47 @@
+void convert(Node *head, TreeNode *&root) {
+    // Your code here
+    if(!head)
+        return;
+    TreeNode *node = new TreeNode(head->data);
+    node->data = head->data;
+    node->left = NULL;
+    node->right = NULL;
+    root = node;
+    Node *ptr = head;
+    queue<TreeNode*> q;
+    q.push(root);
+    while(ptr!=NULL)
+    {
+        TreeNode *node = q.front();
+        q.pop();
+        Node *left = ptr->next;
+        ptr = ptr->next;
+        
+        if(left)
+        {
+            TreeNode *left_child = new TreeNode(left->data);
+            left_child->data = left->data;
+            left_child->left=NULL;
+            left_child->right=NULL;
+            node->left = left_child;
+            q.push(left_child);
+            if(ptr)
+            {
+                Node *right = ptr->next;
+                ptr = ptr->next;
+                if(right)
+                {
+                    TreeNode *right_child = new TreeNode(right->data);
+                    right_child->data = right->data;
+                    right_child->right=NULL;
+                    right_child->right=NULL;
+                
+                    node->right = right_child;
+                    q.push(right_child);
+                }
+            }
+        }
+        
+        
+    }
+}

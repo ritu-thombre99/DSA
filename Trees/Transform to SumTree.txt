@@ -1,0 +1,29 @@
+class Solution {
+  public:
+  
+    // Convert a given tree to a tree where every node contains sum of values of
+    // nodes in left and right subtrees in the original tree
+    int util(Node *node)
+    {
+        if(!node)
+            return 0;
+        if(!node->left && !node->right)
+        {
+            int x = node->data;
+            node->data = 0;
+            return x;
+        }
+        int x = node->data;
+        node->data = util(node->left)+util(node->right);
+        return (x+node->data);
+    }
+    void toSumTree(Node *node)
+    {
+        // Your code here
+        if(!node)
+            return;
+        if(!node->left && !node->right)
+            node->data = 0;
+        util(node);
+    }
+};

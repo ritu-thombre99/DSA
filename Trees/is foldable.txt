@@ -1,0 +1,45 @@
+\\ method 1
+bool util(Node *left, Node *right)
+{
+    if(!left && !right)
+        return true;
+    if(!left || !right)
+        return false;
+    return util(left->left,right->right)&&util(left->right,right->left);
+}
+bool IsFoldable(Node* root)
+{
+    if(!root)
+        return true;
+    return util(root->left,root->right);
+   // Your code goes here
+}
+
+
+
+\\method 2
+bool IsFoldable(Node* root)
+{
+    if(!root)
+        return true;
+    if(root->left==NULL && root->right==NULL)
+        return true;
+    else if(root->left!=NULL && root->right!=NULL)
+    {
+        Node *left = root->left;
+        Node *right = root->right;
+        if ((!left->right && !right->left)||(left->right && right->left))
+            if((!left->left && !right->right)||(left->left && right->right))
+                return true;
+            else
+                return false;
+        else
+            return false;
+    } 
+    else if (!(root->left==NULL && root->right!=NULL) && !(root->left!=NULL && root->right==NULL))
+        //return false;
+        return (IsFoldable(root->left) && IsFoldable(root->right));
+    else
+        return false;
+    // Your code goes here
+}

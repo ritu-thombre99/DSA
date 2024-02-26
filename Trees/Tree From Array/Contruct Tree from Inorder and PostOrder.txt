@@ -1,0 +1,25 @@
+//Function to return a tree created from postorder and inoreder traversals.
+int search(int arr[], int start, int end, int x)
+{
+    for(int i=start;i<=end;i++)
+        if(arr[i]==x)
+            return i;
+    return -1;
+}
+Node* util(int in[], int post[], int in_start, int in_end, int &index)
+{
+    if(index<0 || in_end<in_start)
+        return NULL;
+    Node *root = new Node(post[index--]);
+    int mid_index = search(in,in_start,in_end,root->data);
+    root->right = util(in,post, mid_index+1, in_end, index);
+    root->left = util(in,post, in_start, mid_index-1, index);
+    
+    return root;
+}
+Node *buildTree(int in[], int post[], int n) {
+    // Your code here
+    int curr_index = n-1;
+    return util(in, post, 0, n-1, curr_index);
+    
+}

@@ -1,0 +1,57 @@
+/* A binary tree Node
+struct Node
+{
+    int data;
+    Node* left, * right;
+}; */
+void printLeft(Node *root)
+{
+    if(root!=NULL)
+    {
+        if(root->left!=NULL)
+        {
+            cout<<root->data<<" ";
+            printLeft(root->left);
+        }
+        else if(root->right != NULL)
+        {
+            cout<<root->data<<" ";
+            printLeft(root->right);
+        }
+    }
+}
+void printRight(Node *root)
+{
+    if(root != NULL)
+    {
+        if(root -> right!= NULL)
+        {
+            printRight(root->right);
+            cout<<root->data<<" ";
+        }
+        else if(root->left != NULL)
+        {
+            printRight(root->left);
+            cout<<root->data<<" ";
+        }
+    }
+}
+void printLeaves(Node *root)
+{
+    if(root != NULL)
+    {
+        printLeaves(root->left);
+        if(root->left==NULL&&root->right==NULL)
+            cout<<root->data<<" ";
+        printLeaves(root->right);
+    }
+}
+void printBoundary(Node *root)
+{
+     //Your code here
+     cout<<root->data<<" ";
+     printLeft(root->left);
+     printLeaves(root->left);
+     printLeaves(root->right);
+     printRight(root->right);
+}

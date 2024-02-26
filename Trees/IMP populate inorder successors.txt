@@ -1,0 +1,41 @@
+
+Given a Binary Tree, write a function to populate next pointer for all nodes. The next pointer for every node should be set to point to inorder successor.
+
+class Solution
+{
+public:
+
+    void populateNext(Node *root)
+    {
+        if(!root)
+            return;
+        stack<Node*> s;
+        Node *prev = NULL;
+        Node *current = root;
+        while(true)
+        {
+            while(current)
+            {
+                s.push(current);
+                current=current->left;
+            }
+            if(!s.empty() && current==NULL)
+            {
+                Node *node = s.top();
+                s.pop();
+                if(prev==NULL)
+                    prev = node;
+                else
+                {
+                    prev->next = node;
+                    prev = node;
+                }
+                if(node->right)
+                    current = node->right;
+            }
+            else
+                break;
+        }
+        
+    }
+};

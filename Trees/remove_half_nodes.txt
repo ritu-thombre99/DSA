@@ -1,0 +1,13 @@
+Node *removeHalfNodes(Node *root)
+{
+   //add code here.
+   if(root == NULL)
+        return root;
+    root->left = removeHalfNodes(root->left);
+    root->right = removeHalfNodes(root->right);
+    if(root->left && !root->right)
+        return root->left;
+    if(!root->left && root->right)
+        return root->right;
+    return root;
+}

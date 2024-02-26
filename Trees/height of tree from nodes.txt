@@ -1,0 +1,16 @@
+he9ight of binary tree
+
+gp sum = a(r^n - 1)/(r-1) if r>0
+here a always = 1
+r always = 2
+therefore n represents height
+i.e height = log10(number of nodes)/log10(2)
+
+
+class Solution{
+public:
+    int heapHeight(int N, int arr[]){
+        // code here
+        return log10(N)/log10(2);
+    }
+};

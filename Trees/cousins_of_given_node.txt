@@ -1,0 +1,59 @@
+class Solution
+{
+    public:
+    vector<int> printCousins(Node* root, Node* node_to_find)
+    {
+        //code here
+        if (!root || !left || !right)
+        {
+            vector<int> v;
+            v.push_back(-1);
+            return v;
+        }
+        queue<pair<Node*,int>> q;
+        map<int,vector<Node*>> m;
+        int found_level = -1;
+        Node *ignore_node=NULL;
+        q.push(make_pair(root,1));
+        while(!q.empty())
+        {
+            pair<Node*,int> temp = q.front();
+            q.pop();
+            Node *node = temp.first;
+            int level = temp.second;
+            Node *left_child = node->left;
+            Node *right_child = node->right;
+            m[level].push_back(node);
+            if(node == node_to_find)
+                found_level = level;
+            if(left_child)
+            {
+                if(left_child == node_to_find)
+                {
+                    found_level = level + 1;
+                    ignore_node = right_child;
+                }
+                q.push(make_pair(left_child,level+1));
+            }
+            if(right_child)
+            {
+                if(right_child == node_to_find)
+                {
+                    found_level = level + 1;
+                    ignore_node = left_child;
+                }
+                q.push(make_pair(right_child,level+1));
+            }
+        }
+        vector<int> v;
+        for(int i=0;i<m[found_level].size();i++)
+        {
+            if (m[found_level][i] != ignore_node && m[found_level][i] != node_to_find)
+                v.push_back(m[found_level][i]->data);
+        }
+        if(v.empty())
+            v.push_back(-1);
+        return v;
+    }
+    
+};

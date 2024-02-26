@@ -1,0 +1,46 @@
+check if inorder, postorder and preorder represent the same tree
+Search for the first element of preorder array in the inorder array and store it’s index as idx, if it doesn’t exist then return False. Also, check if that element present in the postorder array or not. If it is not then return False.
+Everything from 0th index for inorder and postorder and from 1st index for preorder of length idx becomes left subtree for first element of the preorder array.
+Everything from position idx+1 for inorder and preorder and from idx for postorder of length (length-idx-1) becomes right subtree for first element of preorder array.
+Repeat the steps 1 to 3 recursively until length of arrays become either 0 (in which case we 
+return true) or 1 (in which case we return True only if all three arrays are equal, else False).
+
+    bool checktree(int preorder[], int inorder[], int postorder[], int N) 
+    { 
+    	// Your code goes here
+    	if(N==0)
+    	    return true;
+        if(N==1)
+        {
+            if( (preorder[0] == inorder[0]) && (inorder[0]==postorder[0]))
+                return true;
+            else
+                return false;
+        }
+        int index = -1;
+        int f = false;
+        for(int i=0;i<N;i++)
+        {
+            if(preorder[0]==inorder[i])
+            {
+                index = i;
+                break;
+            }
+        }
+        if(index!=-1)
+        {    
+            for(int i=0;i<N;i++)
+            {
+                if(preorder[0] == postorder[i])
+                {
+                    f = true;
+                    break;
+                }
+            }
+        }
+        if(f==false || index==-1)
+            return false;
+        int left = checktree(preorder + 1, inorder, postorder, index);
+        int right = checktree(preorder+index+1, inorder+index+1,postorder+index, N-index-1);
+        return left&&right;
+    } 

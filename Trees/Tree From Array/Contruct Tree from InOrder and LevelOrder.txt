@@ -1,0 +1,54 @@
+int search(vector<int> arr, int start, int end, int x)
+{
+    for(int i=start;i<=end;i++)
+        if(arr[i]==x)
+            return i;
+    return -1;
+}
+Node *util(vector<int> in_order, vector<int> level_order, int in_start, int in_end)
+{
+    if(in_end<in_start || level_order.empty())
+        return NULL;
+    int mid_index = search(in_order, in_start, in_end, level_order[0]);
+    Node *root = new Node(level_order[0]);
+    vector<int> left;
+    vector<int> right;
+    for(int i=0;i<level_order.size();i++)
+    {
+        for(int j=in_start;j<= mid_index-1;j++)
+        {
+            if(in_order[j] == level_order[i])
+            {
+                left.push_back(level_order[i]);
+                break;
+            }
+        }
+        for(int j=mid_index+1;j <= in_end;j++)
+        {
+            if(in_order[j] == level_order[i])
+            {
+                right.push_back(level_order[i]);
+                break;
+            }
+        }
+    }
+    
+    
+    root->left = util(in_order, left, in_start, mid_index-1);
+    root->right = util(in_order, right, mid_index+1, in_end);
+    return root;
+}
+Node* buildTree(int inorder[], int levelOrder[], int iStart, int iEnd,int n)
+{
+//add code here.
+    int level_index = 0;
+    vector<int> level_order;
+    vector<int> in_order;
+    for(int i=0;i<n;i++)
+    {
+        level_order.push_back(levelOrder[i]);
+        in_order.push_back(inorder[i]);
+    }
+    return util(in_order, level_order, 0, n-1);
+    
+}

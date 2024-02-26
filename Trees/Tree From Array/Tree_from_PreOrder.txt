@@ -1,0 +1,27 @@
+// Every node has either two child or none
+struct Node* newNode(int data)
+{
+    struct Node *node = (Node*)malloc(sizeof(Node));
+    node->data = data;
+    node->left = node->right = NULL;
+    return node;
+}
+Node *util(int pre[], char preLN[], int n,int &index)
+{
+    if(index>=n)
+        return NULL;
+    struct Node *node = newNode(pre[index]);
+    index=index+1;
+    if(preLN[index-1]=='N')
+    {
+        node->left = util(pre,preLN,n,index);
+        node->right = util(pre,preLN,n,index);
+    }
+    return node;
+}
+struct Node *constructTree(int n, int pre[], char preLN[])
+{
+    // Code here
+    int index = 0;
+    return util(pre,preLN,n,index);
+}

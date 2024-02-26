@@ -1,0 +1,19 @@
+//Function to return the maximum difference between any node and its ancestor.
+int util(Node *root, int *max_diff)
+{
+    if(!root)
+        return INT_MAX;
+    if(!root->left && !root->right)
+        return root->data;
+    int val = min(util(root->left,max_diff),util(root->right,max_diff));
+    *max_diff = max(*max_diff, root->data-val);
+    return min(val,root->data);
+}
+
+int maxDiff(Node* root)
+{
+    // Your code here
+    int max_diff = INT_MIN; 
+    util(root,&max_diff);
+    return max_diff;
+}

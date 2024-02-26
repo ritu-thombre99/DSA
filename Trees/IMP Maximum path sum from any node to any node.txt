@@ -1,0 +1,29 @@
+Complexity - O(N) number of nodes
+
+same as max sum from any leaf to any leaf if all positive values
+problem occur when negative value present
+ignore the nodes which have negative value using max(root->data, root->data+max(l,r)) // which ignores case when both left and right child have neg values
+
+
+class Solution {
+  public:
+    //Function to return maximum path sum from any node in a tree.
+    int util(Node *root, int &max_sum)
+    {
+        if(!root)
+            return 0;
+        int left = util(root->left,max_sum);
+        int right = util(root->right,max_sum);
+        int temp = max( max(left,right)+root->data, root->data);
+        int ans = max(temp, left+right+root->data);
+        max_sum = max(max_sum, ans);
+        return temp;
+    }
+    int findMaxSum(Node* root)
+    {
+        // Your code goes here
+        int max_sum = INT_MIN;
+        util(root, max_sum);
+        return max_sum;
+    }
+};

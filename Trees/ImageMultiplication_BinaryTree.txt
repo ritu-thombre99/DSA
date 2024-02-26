@@ -1,0 +1,26 @@
+class Solution
+{
+    public:
+    void util(Node *root, Node* mir_root, long long *sum)
+    {
+        if(!root)
+            return;
+        if (mir_root)
+        {
+            if(mir_root->right)
+                util(root->left, mir_root->right, sum);
+            *sum = *sum + root->data*(mir_root->data);
+            if(mir_root->left)
+                util(root->right, mir_root->left, sum);
+        }
+    }
+    long long imgMultiply(Node *root)
+    {
+        // code here
+        if(!root)
+            return 0;
+        long long sum = (root->data)*(root->data);
+        util(root->left,root->right,&sum);
+        return (sum%modulus);
+    }
+};

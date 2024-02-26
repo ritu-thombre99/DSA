@@ -1,0 +1,26 @@
+
+class Solution{
+  public:
+    /*You are required to complete below method */
+    int util(Node *root, vector<int> &v, int k)
+    {
+        if(!root)
+            return 0;
+        if(!root->left && !root->right)
+            return 1;
+        int leaves = util(root->left,v,k)+util(root->right,v,k);
+        if(leaves==k)
+            v.push_back(root->data);
+        return leaves;
+    }
+    vector<int> btWithKleaves(Node *root, int k)
+    { 
+        //your code here.
+        vector<int> v;
+        util(root,v,k);
+        if(v.empty())
+            v.push_back(-1);
+        return v;
+    }
+
+};

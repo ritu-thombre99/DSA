@@ -1,0 +1,33 @@
+#define MAX_HEIGHT 10000
+class Solution
+{
+    public:
+    void util(Node *root, int curr_sum ,vector<vector<int>> &v, int k,
+        int path[], int path_len)
+    {
+        if(!root)
+            return;
+        path[path_len] = root->key;
+        path_len = path_len + 1;
+        curr_sum = curr_sum + root->key;
+        if(curr_sum == k)
+        {
+            vector<int> temp;
+            for(int i=0;i<path_len;i++)
+                temp.push_back(path[i]);
+            v.push_back(temp);
+        }
+        util(root->left, curr_sum, v, k, path, path_len);
+        util(root->right, curr_sum, v, k, path, path_len);
+    }
+    vector<vector<int>> printPaths(Node *root, int sum)
+    {
+        //code here
+        
+        vector<vector<int>> v;
+        
+        int path[MAX_HEIGHT];
+        util(root,0,v,sum,path,0);
+        return v;
+    }
+};

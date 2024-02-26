@@ -1,0 +1,85 @@
+class Solution{
+  public:
+    /* The function should clone the passed tree and return 
+       root of the cloned tree */
+    Node* cloneTree(Node* tree)
+    {
+       //Your code here
+        if(!tree)
+            return NULL;
+        Node *root = (Node*)malloc(sizeof(Node));
+        Node *left = (Node*)malloc(sizeof(Node));
+        Node *right = (Node*)malloc(sizeof(Node));
+        Node *random = (Node*)malloc(sizeof(Node));
+        
+        root->data = tree->data;
+        if(tree->left)
+        {
+            left->data = tree->left->data;
+            root->left = left;
+        }
+        else
+            root->left = NULL;
+            
+        if(tree->right)
+        {
+            right->data = tree->right->data;
+            root->right = right;
+        }
+        else
+            root->right = NULL;
+            
+        if(tree->random)
+        {
+            random->data = tree->random->data;
+            root->random = random;
+        }
+        else
+            root->random = NULL;
+        
+        root->left = cloneTree(tree->left);
+        root->right = cloneTree(tree->right);
+        return root;
+        
+    }
+};
+
+
+
+// SPace optimized solution
+
+Node* copyLeftRightNode(Node* treeNode, unordered_map<Node *, Node *> &mymap)
+{
+    if (treeNode == NULL)
+        return NULL;
+    Node* cloneNode = newNode(treeNode->key);
+    mymap[treeNode] = cloneNode;
+    cloneNode->left  = copyLeftRightNode(treeNode->left, mymap);
+    cloneNode->right = copyLeftRightNode(treeNode->right, mymap);
+    return cloneNode;
+}
+
+// This function copies random node by using the hashmap built by
+// copyLeftRightNode()
+void copyRandom(Node* treeNode,  Node* cloneNode, unordered_map<Node *, Node *> &mymap)
+{
+    if (cloneNode == NULL)
+        return;
+    cloneNode->random =  mymap[treeNode->random];
+    copyRandom(treeNode->left, cloneNode->left, mymap);
+    copyRandom(treeNode->right, cloneNode->right, mymap);
+}
+
+// This function makes the clone of given tree. It mainly uses
+// copyLeftRightNode() and copyRandom()
+Node* cloneTree(Node* tree)
+{
+    if (tree == NULL)
+        return NULL;
+    unordered_map<Node *, Node *> mymap;
+    Node* newTree = copyLeftRightNode(tree, mymap);
+    copyRandom(tree, newTree, mymap);
+    return newTree;
+}
+
+

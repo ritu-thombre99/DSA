@@ -1,0 +1,106 @@
+\\ Method 1: Use iterative level order traversal
+sort each level
+complexity - height*O(width)
+
+class Solution
+{
+    public:
+    struct Comparator{
+        bool operator()(pair<int,int> a, pair<int,int> b){
+            return a.second < b.second;
+        }  
+    };
+    vector <vector <int>> binTreeSortedLevels (int arr[], int n)
+    {
+        // Your code here
+        vector<vector<int>> v;
+        queue<pair<int,int>> pq;
+        pq.push({0,arr[0]});
+        while(!pq.empty())
+        {
+            int size = pq.size();
+            vector<int> v_temp;
+            while(size--)
+            {
+                pair<int,int> temp = pq.front();
+                pq.pop();
+                int index = temp.first;
+                int value = temp.second;
+                v_temp.push_back(temp.second);
+                if(2*index+1 < n)
+                    pq.push({2*index+1,arr[2*index+1]});
+                if(2*index+2 < n)
+                    pq.push({2*index+2,arr[2*index+2]});
+                
+            }
+            sort(v_temp.begin(),v_temp.end());
+            v.push_back(v_temp);
+        }
+        return v;
+        
+    }
+};
+
+\\ Method 2 O(NlogN)
+
+maintain two priority queues to maintain order in level
+main tain queue for iterative level order traversal
+
+class Solution
+{
+    public:
+    struct Comparator{
+        bool operator()(pair<int,int> a, pair<int,int> b){
+            return a.second < b.second;
+        }  
+    };
+    vector <vector <int>> binTreeSortedLevels (int arr[], int n)
+    {
+        // Your code here
+        vector<vector<int>> v;
+        vector<int> temp_v;
+        queue<pair<int,int>> q;
+        priority_queue<int,vector<int>, greater<int>> curr_level;
+        priority_queue<int,vector<int>, greater<int>> next_level;
+        q.push({0,arr[0]});
+        curr_level.push(arr[0]);
+        q.push({-1,-1});
+        while(!q.empty())
+        {
+            pair<int,int> node = q.front();
+            
+            if(node.first==-1)
+            {
+                q.pop();
+                if(q.empty())
+                    break;
+                q.push({-1,-1});
+                v.push_back(temp_v);
+                temp_v.clear();
+                curr_level.swap(next_level);
+                continue;
+            }
+            int smallest_node = curr_level.top();
+            temp_v.push_back(smallest_node);
+            curr_level.pop();
+            q.pop();
+            
+            int curr_index = node.first;
+            if(2*curr_index + 1 < n)
+            {
+                q.push({2*curr_index + 1,arr[2*curr_index + 1] });
+                next_level.push(arr[2*curr_index + 1]);
+            }
+            if(2*curr_index + 2 < n)
+            {
+                q.push({2*curr_index + 2,arr[2*curr_index + 2] });
+                next_level.push(arr[2*curr_index + 2]);
+            }
+            // cout<<smallest_node<<endl;
+        }
+        v.push_back(temp_v);
+        temp_v.clear();
+        return v;
+        
+    }
+};

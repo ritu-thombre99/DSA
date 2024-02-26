@@ -1,0 +1,34 @@
+keep track of non empty node encountered
+after this non empty node, every node should be leaf node 
+
+   bool isCompleteBT(Node* root){
+        //code here
+        queue<Node*> q;
+        q.push(root);
+        bool non_full_node = false;
+        while(!q.empty())
+        {
+            Node *node = q.front();
+            q.pop();
+            if(node->left)
+            {
+                if(non_full_node==true)
+                    return false;
+                q.push(node->left);
+            }
+            else
+                non_full_node = true;
+                
+            if(node->right)
+            {
+                if(non_full_node==true)
+                    return false;
+                q.push(node->right);
+            }
+            else
+                non_full_node = true;
+            
+            
+        }
+        return true;
+    }

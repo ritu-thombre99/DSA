@@ -1,0 +1,30 @@
+class Solution {
+  public:
+    /*This function returns true if the tree contains 
+    a duplicate subtree of size 2 or more else returns false*/
+    string util(Node *root, unordered_map<string,int> &mp)
+    {
+        if(!root)
+            return "$";
+        string s = "";
+        s = s + to_string(root->data);
+        if(!root->left && !root->right)
+            return s;
+        s = s + util(root->left, mp);
+        s = s + util(root->right, mp);
+        mp[s]=mp[s]+1;
+        return s;
+    }
+    int dupSub(Node *root) {
+         // code here
+        unordered_map<string, int> mp;
+        util(root, mp);
+        int count = 0;
+        for(auto itr=mp.begin();itr!=mp.end();itr++)
+        {
+            if(itr->second >= 2)
+                count = count + 1; 
+        }
+        return count;
+    }
+};

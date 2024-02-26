@@ -1,0 +1,17 @@
+Count Number of SubTrees having given Sum :
+int util(Node *root,int X, int *count)
+{
+    if(!root)
+        return 0;
+    int temp = (root->data + util(root->left,X,count) + util(root->right,X,count));
+    if (temp == X)
+        *count = *count + 1;
+    return temp;
+}
+int countSubtreesWithSumX(Node* root, int X)
+{
+	// Code here
+	int count = 0;
+	util(root,X,&count);
+	return count;	
+}

@@ -1,0 +1,17 @@
+//Function that constructs BST from its preorder traversal.
+Node* solve(int pre[],int &i,int ub,int n){
+    if(i >= n or pre[i] >= ub) 
+        return NULL;
+    
+    Node* root = newNode(pre[i++]);
+    
+    root->left = solve(pre,i,root->data,n);
+    root->right = solve(pre,i,ub,n);
+    
+    return root;
+}
+
+Node* post_order(int pre[], int n){
+    int i=0;
+    return solve(pre,i,INT_MAX,n);
+}

@@ -1,0 +1,29 @@
+class Solution{
+    public:
+    /*You are required to complete this method */
+    // Return the size of the largest sub-tree which is also a BST
+    int size(Node *root)
+    {
+        if(!root)
+            return 0;
+        
+        return 1+size(root->left)+size(root->right);
+    }
+    bool is_bst(Node *root, int ub, int lb)
+    {
+        if(!root)
+            return true;
+        if(root->data>ub || root->data<lb)
+            return false;
+        return is_bst(root->left,root->data-1,lb)&&is_bst(root->right,ub,root->data+1);
+    }
+    int largestBst(Node *root)
+    {
+    	//Your code here
+    	if(!root)
+    	    return 0;
+	    if(is_bst(root,INT_MAX,INT_MIN))
+	        return size(root);
+        return max(largestBst(root->left),largestBst(root->right));
+    }
+};
