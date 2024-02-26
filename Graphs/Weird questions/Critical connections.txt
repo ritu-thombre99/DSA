@@ -1,0 +1,50 @@
+Given an undirected Connected graph of V vertices and E edges.
+A critical connection is an edge that, if removed, will make some nodes unable to reach some other nodes. Find all critical connections in the graph.
+Note: There are many possible orders for the answer. You are supposed to print the edges in sorted order, and also an edge should be in sorted order too. So if there's an edge between node 1 and 2, you should print it like (1,2) and not (2,1).
+
+This problem basically reduces to finding a bridge edge
+
+
+class Solution {
+public:
+    void bridge_edges(int u, int parent, int &discovery_time, bool visited[],
+                        int disc[], int low[], vector<int> adj[], vector<vector<int>> &ans)
+    {
+        visited[u] = true;
+        disc[u] = low[u] = ++discovery_time;
+        for(int i=0;i<adj[u].size();i++)
+        {
+            int v = adj[u][i];
+            if(!visited[v])
+            {
+                bridge_edges(v,u,discovery_time,visited,disc,low,adj,ans);
+                low[u] = min(low[u],low[v]);
+                if(low[v] > disc[u])
+                {
+                    vector<int> temp{u,v};
+                    if(u>v)
+                    {
+                        temp.pop_back();
+                        temp.insert(temp.begin(),v);
+                    }
+                    ans.push_back(temp);
+                }
+            }
+            else if(v!=parent)
+                low[u] = min(low[u],disc[v]);
+        }
+    }
+	vector<vector<int>>criticalConnections(int V, vector<int> adj[]){
+	    // Code here
+	    vector<vector<int>> ans;
+	    bool visited[V]={false};
+	    int disc[V]={-1}, low[V];
+	    int discovery_time = 0;
+	    for(int i=0;i<V;i++)
+	        if(!visited[i])
+                bridge_edges(i,-1,discovery_time,visited,disc,low,adj,ans);
+        sort(ans.begin(), ans.end());
+        return ans;
+	}
+};
+

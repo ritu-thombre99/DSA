@@ -1,0 +1,23 @@
+Given a string str, find the length of the longest repeating subsequence such that it can be found twice in the given string. The two identified subsequences A and B can use the same ith character from string str if and only if that ith character has different indices in A and B.
+
+This question is just an LCS with string with itself with condition that character cannot be matched with itself
+class Solution {
+	public:
+		int LongestRepeatingSubsequence(string str){
+		    // Code here
+		    int n = str.length();
+		    vector<vector<int>> dp(n+1, vector<int>(n+1,0));
+		    for(int i=1;i<=n;i++)
+		    {
+		        for(int j=1;j<=n;j++)
+		        {
+		            if(i!=j && str[i-1]==str[j-1])
+		                dp[i][j] = dp[i-1][j-1]+1;
+	                else
+	                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+		        }
+		    }
+		    return dp[n][n];
+		}
+
+};

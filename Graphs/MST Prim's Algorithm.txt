@@ -1,0 +1,50 @@
+use min heap to extract node with minimum edge weight
+
+add unvisited nodes of currently popped nodes to queue
+If adjacency list is used to represent the graph, then using breadth first search, all the vertices can be traversed in O(V + E) time.
+We traverse all the vertices of graph using breadth first search and use a min heap for storing the vertices not yet included in the MST.
+To get the minimum weight edge, we use min heap as a priority queue.
+Min heap operations like extracting minimum element and decreasing key value takes O(logV) time.
+ 
+
+So, overall time complexity
+
+= O(E + V) x O(logV)
+
+= O((E + V)logV)
+
+= O(ElogV)
+class Solution
+{
+	public:
+	//Function to find sum of weights of edges of the Minimum Spanning Tree.
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        // code here
+        vector<bool> visited;
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+        pq.push({0,0});
+        int mst = 0;
+        while(!pq.empty())
+        {
+            pair<int,int> temp = pq.top();
+            pq.pop();
+            int node = temp.second;
+            int dist = temp.first;
+            if(visited[node]==true)
+                continue;
+            visited[node] = true;
+            mst += dist;
+            for(int i=0;i<adj[node].size();i++)
+            {
+                int v = adj[node][i][0];
+                int w = adj[node][i][1];
+                if(visited[v] == false)
+                    pq.push({w,v});
+            }
+        }
+        return mst;
+    }
+};

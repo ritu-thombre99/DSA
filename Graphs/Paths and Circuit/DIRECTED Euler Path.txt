@@ -1,0 +1,62 @@
+Conditions:
+
+1. Graph must be Weakly connected
+2. a- One vertex with in_degree-out_degree=1
+   b- one vertex with in_degree-out_degree=-1
+   c- all other vertex in_degree-out_degree=0
+
+void dfs(int u, vector<int> adj[], vectror<bool> &visited)
+{
+	visited[u] = true;
+	for(int i=0;i<adj[u].size();i++)
+	{
+		int v = adj[u][i];
+		if(!visited[v])
+			dfs(v,adj,visited);
+	}
+}
+bool isWC(int V, vector<int> adj[], vector<int> &in_degree)
+{
+	vector<int> undirected_adj;
+	for(int u=0;u<V;u++)
+	{
+		for(int i=0;i<adj[i].size();i++)
+		{
+			int v = adj[u][i];
+			in_degree[v] += 1;
+			undirected_adj[u].push_back(v);
+			undirected_adj[v].push_back(u);
+		}
+	}
+	int source;
+	for(source=0;source<V;source++)
+		if(adj[source].size()>0)
+			break;
+	vector<bool> visited(V,false);
+	DFS(source,undirected_adj,visited);
+	for(int i=0;i<V;i++)
+		if(!visited[i] && adj[i].size()>0)
+			return false;
+	return true;
+}
+bool isEulerPath(int V, vector<int> adj[])
+{
+	vector<int> in_degree(V,0);
+	if(isWC(V,adj,in_degree)==false))
+		return false;
+	int node1=0,node2=0;
+	for(int i=0;i<V;i++)
+	{
+		if( (adj[i].size()-in_degree[i]) == 1)
+			node1 += 1;
+		else if( (adj[i].size()-in_degree[i]) == -1)
+			node2 += 1;
+		else if( (adj[i].size()-in_degree[i]) > 1)
+			return false;
+		else if( (adj[i].size()-in_degree[i]) < -1)
+			return false;
+	}
+	if(node1!=1 || node2!=1)
+		return false; // only two nodes with abs(in-out)=1
+	return true;
+}

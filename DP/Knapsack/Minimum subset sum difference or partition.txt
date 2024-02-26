@@ -1,0 +1,62 @@
+Given an integer array arr of size N, the task is to divide it into two sets S1 and S2 such that the absolute difference between their sums is minimum and find the minimum difference
+
+Complexity - O(n*sum)
+class Solution{
+
+  public:
+	int minDifference(int arr[], int n)  { 
+	    // Your code goes here
+	    int sum = 0;
+	    for(int i=0;i<n;i++)
+	        sum += arr[i];
+        vector<vector<bool>> dp;
+        //dp[n+1][sum+1] = {1 if some subset from 1st to i'th has a sum 
+        //              equal to j
+        //           0 otherwise}
+        for(int i=0;i<=n;i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<=sum;j++)
+                temp.push_back(false);
+            dp.push_back(temp);
+        }
+        for(int i=0;i<=n;i++) //sum 0 possible for 0 element
+            dp[i][0] = true;
+        // for(int i=1;i<=sum;i++)
+        //     dp[0][i] = false;
+        for (int i = 1; i <= n; i++) 
+        {
+            for (int j = 1; j <= sum; j++) 
+            {
+                // If i'th element is excluded
+                dp[i][j] = dp[i - 1][j];
+ 
+                // If i'th element is included
+                if (arr[i - 1] <= j)
+                    dp[i][j] = dp[i][j]||dp[i - 1][j - arr[i - 1]];
+            }   
+        }
+        int diff = INT_MAX;
+ 
+        // Find the largest j such that dp[n][j]
+        // is true where j loops from sum/2 t0 0
+//Let sum of all the elements be S.  
+
+To find Minimum sum difference, w have to find j such 
+that Min{sum - j*2  : dp[n][j]  == 1 } 
+    where j varies from 0 to sum/2
+
+The idea is, sum of S1 is j and it should be closest
+to sum/2, i.e., 2*j should be closest to sum.
+        for (int j = sum / 2; j >= 0; j--) 
+        {
+            // Find the
+            if (dp[n][j] == true) {
+                diff = sum - 2 * j;
+                break;
+            }
+        }
+        return diff;
+	} 
+};
+

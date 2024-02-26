@@ -1,0 +1,32 @@
+dfs for every node
+if graph is connected all nodes will be marked visited=true in one dfs pass
+so run for loop for each node and see if there are any that are left unvisited and start dfs for them
+
+Complexity - same as DFS O(V+E)
+
+class Solution {
+  public:
+    void dfs(int node, vector<vector<int>> adj, vector<bool> &visited)
+    {
+        visited[node] = true;
+        for(int i=0;i<adj[node].size();i++)
+            if(visited[i]==false && adj[node][i]==1)
+                dfs(i,adj,visited);
+    }
+    int numProvinces(vector<vector<int>> adj, int V) {
+        // code here
+        vector<bool> visited;
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        int count = 0;
+        for(int i=0;i<V;i++)
+        {
+            if(visited[i]==false)
+            {
+                count = count+1;
+                dfs(i,adj,visited);
+            }
+        }
+        return count;
+    }
+};

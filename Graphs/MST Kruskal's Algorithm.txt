@@ -1,0 +1,71 @@
+Sort edges by their weight (ElogE)
+keep choosing edge with smallest weight if this edge doesnt form a cycle (Use disjoint union set for this)
+
+ O(ElogE) or O(ElogV). 
+Sorting of edges takes O(ELogE) time. 
+After sorting, we iterate through all edges and apply the find-union algorithm. The find and union operations can take at most O(LogV) time. So overall complexity is O(ELogE + ELogV) time. The value of E can be at most O(V2), so O(LogV) is O(LogE) the same. Therefore, the overall time complexity is O(ElogE) or O(ElogV)
+
+class Solution
+{
+	public:
+	//Function to find sum of weights of edges of the Minimum Spanning Tree.
+	static bool SortByFirst(pair<int,pair<int,int>> a, pair<int,pair<int,int>> b)
+    {
+        return a.first<b.first;
+    }
+    int find(vector<int> parent, int x)
+    {
+        if(parent[x] == -1)
+            return x;
+        return find(parent, parent[x]);
+    }
+    void Union(vector<int> &parent,vector<int> &rank, int x ,int y)
+    {
+        int parX = find(parent, x);
+        int parY = find(parent, y);
+        if(parX != parY)
+        {
+            if(rank[parX]<rank[parY])
+            {
+                parent[parX] = parY;
+                rank[parY] += rank[parX];
+            }
+            else
+            {
+                parent[parY] = parX;
+                rank[parX] += rank[parY];
+            }
+        }
+    }
+    int spanningTree(int V, vector<vector<int>> adj[])
+    {
+        // code here
+        vector<int> parent,rank;
+        for(int i=0;i<V;i++)
+        {
+            parent.push_back(-1);
+            rank.push_back(1);
+        }
+        vector<pair<int,pair<int,int>>> edges;
+        for(int i=0;i<V;i++)
+        {
+            for(int j=0;j < adj[i].size();j++)
+                edges.push_back({adj[i][j][1], {i,adj[i][j][0]}});
+        }
+        // vector<pair<int,pair<int,int>>> tree;
+        int mst_weight = 0;
+        sort(edges.begin(),edges.end());
+        for(int i=0;i<edges.size();i++)
+        {
+            int x = find(parent,edges[i].second.first);
+            int y = find(parent,edges[i].second.second);
+            if(x!=y)
+            {
+                // tree.push_back(edges[i]);
+                mst_weight = mst_weight + edges[i].first;
+                Union(parent,rank,x,y);
+            }
+        }
+        return mst_weight;
+    }
+};

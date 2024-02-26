@@ -1,0 +1,40 @@
+Complexity - O(rowxcol)
+
+class Solution {
+  public:
+    void bfs(int u, vector<vector<int>> adj, vector<bool> &visited)
+    {
+        visited[u] = true;
+        queue<int> q;
+        q.push(u);
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            for(int i=0;i<adj[node].size();i++)
+            {
+                if(adj[node][i] == 1 && visited[i]==false)
+                {
+                    visited[i] = true;
+                    q.push(i);
+                }
+            }
+        }
+    }
+    int numProvinces(vector<vector<int>> adj, int V) {
+        // code here
+        vector<bool> visited;
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        int count = 0;
+        for(int i=0;i<V;i++)
+        {
+            if(visited[i]==false)
+            {
+                count+=1;
+                bfs(i,adj,visited);
+            }
+        }
+        return count;
+    }
+};

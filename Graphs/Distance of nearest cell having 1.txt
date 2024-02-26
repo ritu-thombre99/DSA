@@ -1,0 +1,68 @@
+Given a binary grid. Find the distance of nearest 1 in the grid for each cell.
+The distance is calculated as |i1 – i2| + |j1 – j2|, where i1, j1 are the row number and column number of the current cell and i2, j2 are the row number and column number of the nearest cell having value 1.
+
+Solution using BFS
+Time and space both O(M*N) as there is matrix representation
+
+push all the nodes having 1 to queue and mark them visited and also make their distance = 0
+
+repeat while queue not empty
+pop front node
+
+for 4 neighbours which are univisited
+	v[row][col] = v[pos.first][pos.second] + abs(row-pos.first) + abs(col-pos.second);
+	mark the neighbour visited and push to queue
+
+
+class Solution 
+{
+    public:
+    //Function to find distance of nearest 1 in the grid for each cell.
+	vector<vector<int>>nearest(vector<vector<int>>grid)
+	{
+	    // Code here
+	    vector<vector<int>> v;
+	    vector<vector<bool>> visited;
+	    queue<pair<int,int>> q;
+	    for(int i=0;i<grid.size();i++)
+	    {
+	        vector<int> temp_v;
+	        vector<bool> temp_visited;
+	        for(int j=0;j<grid[0].size();j++)
+	        {
+	            if(grid[i][j] == 1)
+	            {
+	                temp_v.push_back(0);
+	                temp_visited.push_back(true);
+	                q.push({i,j});
+	            }
+	            else
+	            {
+	                temp_v.push_back(INT_MAX);
+	                temp_visited.push_back(false);
+	            }
+	        }
+	        visited.push_back(temp_visited);
+	        v.push_back(temp_v);
+	    }
+	    vector<int> r{-1,1,0,0};
+	    vector<int> c{0,0,-1,1};
+	    while(!q.empty())
+	    {
+	        pair<int,int> pos = q.front();
+	        q.pop();
+	        for(int i=0;i<4;i++)
+	        {
+	            int row = pos.first + r[i];
+	            int col = pos.second + c[i];
+	            if(row>=0 && col>=0 && row<grid.size() && col<grid[0].size() && visited[row][col] == false)
+	            {
+	                v[row][col] = v[pos.first][pos.second] + abs(row-pos.first) + abs(col-pos.second);
+	                visited[row][col] = true;
+	                q.push({row,col});
+	            }
+	        }
+	    }
+	    return v;
+	}
+};

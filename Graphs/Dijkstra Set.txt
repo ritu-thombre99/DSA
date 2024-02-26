@@ -1,0 +1,45 @@
+Dijkstra using set (self balancing search tree)
+set automatically store nodes with minimum distance at front
+
+Complexity - V(creating dist array)+ElogV
+repeated for all edges
+logV as insertion/deletion takes logV time
+
+class Solution
+{
+	public:
+	
+    vector <int> dijkstra(int V, vector<vector<int>> adj[], int S)
+    {
+        // Code here
+        vector<int> dist;
+        for(int i=0;i<V;i++)
+            dist.push_back(INT_MAX);
+        dist[S] = 0;
+        set< pair<int, int> > setds;
+        setds.insert(make_pair(0, S));
+        while(!setds.empty())
+        {
+            pair<int, int> top = *(setds.begin());
+            setds.erase(setds.begin());
+            
+            int u = top.second;
+            
+            for(int i=0;i<adj[u].size();i++)
+            {
+                int v = adj[u][i][0];
+                int weight = adj[u][i][1];
+                if(dist[u]+weight < dist[v])
+                {
+                    if(dist[v] != INT_MAX)
+                        setds.erase(setds.find(make_pair(dist[v], v)));
+                    dist[v]=dist[u]+weight;
+                    setds.insert(make_pair(dist[v], v));
+                }
+                
+            }
+        }
+        return dist;
+        
+    }
+};

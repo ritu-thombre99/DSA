@@ -1,0 +1,63 @@
+Articulation point is a node which if removed disconnects the graph into two components
+
+Approach -
+Discovery time of a node disc[node] is time at whicb it was processed while dfs
+Low[node] - Lowest numbered node that can be reached from node
+
+for a (parent->child) pair if LOWEST NODE reachable from child COMEST AFTER or = PARENT (i.e parent -> c1 <-> c2) then there is not path between that child and NODES THAT COME BEFORE PARENT
+so that parent node has to be an Articulation point
+
+Complexity - O(V+E)
+
+class Solution {
+  public:
+    void APUtil(vector<int> adj[], int u, vector<bool>& visited,
+            vector<int> &disc, vector<int> &low, int& discovery_time, int parent,
+            int AP[])
+    {
+        int children = 0;
+        visited[u] = true;
+        low[u] = discovery_time+1;
+        disc[u] = discovery_time+1;
+        discovery_time += 1;
+        for(int i=0;i<adj[u].size();i++)
+        {
+            int v = adj[u][i];
+            if(!visited[v])
+            {
+                children += 1;
+                APUtil(adj, v, visited, disc, low, discovery_time, u, AP);
+                low[u] = min(low[u], low[v]); // Tree edge-lowest node that current node can reach = lowest node its child can reach
+                if (parent != -1 && low[v] >= disc[u]) //now path between child(v) and ancestors of parent (u)
+                    AP[u]=1;
+            }
+            else if (v != parent)
+                low[u] = min(low[u], disc[v]); // cross edge-lowest node current node can reach = discovery time of back edge's node
+        }
+        if (parent == -1 && children > 1) // exlude root node and a lonely abondoned node by itself with no children
+            AP[u]=1;
+    }
+    vector<int> articulationPoints(int V, vector<int>adj[]) 
+    {
+        // Code here
+        vector<bool> visited(V,false);
+        vector<int> disc(V,0), low(V,0);
+        int AP[V] = {0};
+        int t=0;
+        for(int i=0;i<V;i++)
+            if(!visited[i])
+                APUtil(adj, i, visited, disc, low, t, -1, AP);
+        vector<int> ans;
+        for(int i=0;i<V;i++)
+            if(AP[i]==1)
+                ans.push_back(i);
+        if(ans.empty())
+        {
+            ans.push_back(-1);
+            return ans;
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
+        
+    }
+};

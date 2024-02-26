@@ -1,0 +1,48 @@
+// recursive dfs
+    void dfsutil(int curr_node, vector<int> adj[], vector<int> &dfs, vector<bool> &visited)
+    {
+        visited[curr_node] = true;
+        dfs.push_back(curr_node);
+        for(int i=0;i<adj[curr_node].size();i++)
+        {
+            if(visited[adj[curr_node][i]] == false)
+                dfsutil(adj[curr_node][i], adj, dfs, visited);
+        }
+    }
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+         // Code here
+         vector<int> dfs;
+         vector<bool> visited;
+         for(int i=0;i<V;i++)
+             visited.push_back(false);
+         dfsutil(0,adj,dfs,visited);
+         return dfs;
+    }
+
+
+
+\\ terative DFS
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        vector<int> dfs;
+        vector<bool> visited;
+        stack<int> s;
+        s.push(0);
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        while(!s.empty())
+        {
+            int node = s.top();
+            s.pop();
+            if(visited[node] == false)
+            {
+                visited[node] = true;
+                dfs.push_back(node);
+            }
+            for(int i=0;i<adj[node].size();i++)
+                if(visited[adj[node][i]] == false)
+                    s.push(adj[node][i]);
+        }
+        return dfs;
+    }
+};

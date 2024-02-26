@@ -1,0 +1,30 @@
+This algorithm works for both the directed and undirected weighted graphs. But, it does not work for the graphs with negative cycles
+
+Floyd Warshall algorithm to find shortest path between each pair of node for an adjecency matrix
+
+Complexity - O(n*n*n)
+
+class Solution {
+  public:
+	void shortest_distance(vector<vector<int>>&matrix){
+	    // Code here
+	    int n = matrix.size();
+	    for(int k=0;k<n;k++)
+	    {
+	        for(int i=0;i<n;i++)
+	        {
+	            for(int j=0;j<n;j++)
+	            {
+			// self node or path doesnt exist
+	                if(i==k || j==k || i==j || matrix[k][j]==-1 || matrix[i][k]==-1 )
+                           continue;
+                        // if path doesnt exist between node i & j but there is path through k (i-k-j) then assign that to be the new 				// weight
+                    	if(matrix[i][j]==-1)
+                           matrix[i][j]=matrix[i][k]+matrix[k][j];
+	                else if(matrix[i][j] > matrix[i][k]+matrix[k][j])
+	                   matrix[i][j] = matrix[i][k]+matrix[k][j];
+	            }
+	        }
+	    }
+	}
+};

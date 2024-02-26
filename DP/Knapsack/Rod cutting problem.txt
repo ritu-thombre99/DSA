@@ -1,0 +1,17 @@
+Given a rod of length N inches and an array of prices, price[] that contains prices of all pieces of size smaller than N. Determine the maximum value obtainable by cutting up the rod and selling the pieces.
+
+class Solution{
+  public:
+    int cutRod(int price[], int n) {
+        //code here
+        vector<int> wt;
+        for(int i=1;i<=n;i++)
+            wt.push_back(i);
+        vector<int> dp(n+1,0); // dp[w] contains maximum value that can be obtained for weight w
+        for(int w=0;w<=n;w++)
+            for(int i=0;i<n;i++)
+                if(wt[i]<=w)
+                    dp[w]=max(dp[w],price[i]+dp[w-wt[i]]);
+        return dp[n];
+    }
+};

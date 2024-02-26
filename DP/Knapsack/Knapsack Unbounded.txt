@@ -1,0 +1,67 @@
+Repeated elements allowed
+// memorized solution
+
+\class Solution{
+public:
+    int solve(vector<vector<int>> &dp, int n, int W, int wt[], int val[])
+    {
+        if(n<=0)
+            return 0;
+        if(dp[n][W])
+            return dp[n][W];
+        if(wt[n-1]<=W)
+        {
+            dp[n][W] = max(solve(dp,n-1,W,wt,val), solve(dp,n,W-wt[n-1],wt,val)+val[n-1]); // unlike 0-1 knapsack, here we we do not pass (n-1) when we call recursive function while choosing item
+            return dp[n][W];
+        }
+        else
+        {
+            dp[n][W] = solve(dp,n-1,W,wt,val);
+            return dp[n][W];
+        }
+    }
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        // code here
+        vector<vector<int>> dp(N+1, vector<int>(W+1,0));
+        return solve(dp,N,W,wt,val);
+    }
+};
+
+
+// Iterative solution
+class Solution{
+public:
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        // code here
+        vector<vector<int>> dp(N+1, vector<int>(W+1,0));
+        for(int w=1;w<=W;w++)
+        {
+            for(int i=1;i<=N;i++)
+            {
+                if(wt[i-1]<=w)
+                    dp[i][w] = max(dp[i-1][w], dp[i][w-wt[i-1]]+val[i-1]); // dp(i,j) = max(dp(i-1,j), dp(i-1,j-wt[i-1]) + val[i-1]) because we can use elements repeatedly
+                else
+                    dp[i][w] = dp[i-1][w];
+            }
+        }
+        return dp[N][W];
+    }
+};
+
+
+Iterative - space optimized
+class Solution{
+public:
+    int knapSack(int N, int W, int val[], int wt[])
+    {
+        // code here
+        vector<int> dp(W+1,0);
+        for(int w=0;w<=W;w++) //weight outside as same array element can be chosen more than once for a weight
+            for(int i=0;i<N;i++)
+                if(wt[i]<=w)
+                    dp[w] = max(dp[w], dp[w-wt[i]]+val[i]);
+        return dp[W];
+    }
+};

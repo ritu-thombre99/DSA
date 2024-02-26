@@ -1,0 +1,123 @@
+Dijkstra's algorithm to find distance of each node from source node
+
+Using custom min heap
+node with lowest distance from source is stored at the top
+if dist(S,curr_node)+dist(curr_node,neighbour) < dist(S,neighbour) then dist of neighbour is updated (in min heap as well)
+
+Complexity - V(creating dist array)+ElogV
+repeated for all edges E
+logV for insertion, deletion
+
+class Solution
+{
+	public:
+	//Function to find the shortest distance of all the vertices
+    //from the source vertex S.
+    void heapify(vector<pair<int,int>> &heap, int i)
+    {
+        if(heap.empty())
+            return;
+        int smallest = i;
+        int left = 2*i+1;
+        int right = 2*i+2;
+        if(left<heap.size() && heap[smallest].second > heap[left].second)
+            smallest = left;
+        if(right<heap.size() && heap[smallest].second > heap[right].second)
+            smallest = right;
+        if(smallest != i)
+        {
+            pair<int,int> temp = heap[smallest];
+            heap[smallest] = heap[i];
+            heap[i] = temp;
+            heapify(heap,smallest);
+        }
+    }
+    int parent(int child)
+    {
+        return (child-1)/2;
+    }
+    void insert(vector<pair<int,int>> &heap, int node, int dis)
+    {
+        if(heap.empty())
+        {
+            heap.push_back({node,dis});
+            return;
+        }
+        heap.push_back({node,dis});
+        int child = heap.size() - 1;
+        while(child>=0 && parent(child)>=0 && heap[parent(child)].second > heap[child].second)
+        {
+            pair<int,int> temp = heap[parent(child)];
+            heap[parent(child)] = heap[child];
+            heap[child] = temp;
+            child = parent(child);
+        }
+        
+    }
+    void delete_element(vector<pair<int,int>> &heap, pair<int,int> to_delete)
+    {
+        int index=-1;
+        for(int i=0;i<heap.size();i++)
+        {
+            if(heap[i].first == to_delete.first)
+            {
+                index = i;
+                break;
+            }
+        }
+        if(index==-1)
+            return;
+        heap[index].second = INT_MIN;
+        int child = index;
+        while(child>=0 && parent(child)>=0 && heap[parent(child)].second > heap[child].second)
+        {
+            pair<int,int> temp = heap[parent(child)];
+            heap[parent(child)] = heap[child];
+            heap[child] = temp;
+            child = parent(child);
+        }
+        heap[0] = heap[heap.size()-1];
+        heap.erase(heap.end());
+        heapify(heap,0);
+    }
+    vector <int> dijkstra(int V, vector<vector<int>> adj[], int S)
+    {
+        // Code here
+        vector<int> prev, dist;
+        for(int i=0;i<V;i++)
+        {
+            // prev.push_back(-1);
+            dist.push_back(INT_MAX);
+        }
+        dist[S] = 0;
+        // prev[S] = S;
+        vector<pair<int,int>> heap;
+        heap.push_back({S,0});
+        while(!heap.empty())
+        {
+            pair<int,int> top = heap[0];
+            heap[0] = heap[heap.size()-1];
+            heap.erase(heap.end());
+            heapify(heap,0);
+            
+            int u = top.first;
+            
+            for(int i=0;i<adj[u].size();i++)
+            {
+                int v = adj[u][i][0];
+                int weight = adj[u][i][1];
+                if(dist[u]+weight < dist[v])
+                {
+                    if(dist[v] != INT_MAX)
+                        delete_element(heap,{v,dist[v]});
+                    // prev[v]=u;
+                    dist[v]=dist[u]+weight;
+                    insert(heap,v,dist[v]);
+                }
+                
+            }
+        }
+        return dist;
+        
+    }
+};

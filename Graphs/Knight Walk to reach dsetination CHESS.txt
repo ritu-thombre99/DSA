@@ -1,0 +1,47 @@
+Given a square chessboard, the initial position of Knight and position of a target. Find out the minimum steps a Knight will take to reach the target position.
+Note:
+The initial and the target position co-ordinates of Knight have been given accoring to 1-base indexing.
+
+SOlution using BFS (Lee's algorithm) to find shortest path from source to destination
+
+In worst case, knight travels all cells so time complexity is O(n^2)
+
+class Solution {
+public:
+	int minStepToReachTarget(vector<int>&KnightPos, vector<int>&TargetPos, int N){
+	    // Code here
+	    int curr_x = KnightPos[0]-1, curr_y = KnightPos[1]-1;
+	    int target_x = TargetPos[0]-1, target_y = TargetPos[1]-1;
+	    vector<vector<bool>> visited;
+	    for(int i=0;i<N;i++)
+	    {
+	        vector<bool> temp;
+	        for(int j=0;j<N;j++)
+	            temp.push_back(false);
+            visited.push_back(temp);
+	    }
+	    queue<pair<pair<int,int>,int>> q;
+	    q.push({{curr_x,curr_y},0});
+	    visited[curr_x][curr_y] = true;
+	    vector<pair<int,int>> neighs{ {-2,-1},{-2,1},{2,-1},{2,1},{1,2},{1,-2},{-1,2},{-1,-2}};
+	    while(!q.empty())
+	    {
+	        pair<pair<int,int>,int> temp = q.front();
+	        pair<int,int> pos = temp.first;
+	        int dist = temp.second;
+	        q.pop();
+	        if(pos.first == target_x && pos.second == target_y)
+	            return dist;
+            for(int i=0;i<neighs.size();i++)
+            {
+                int row = pos.first + neighs[i].first;
+                int col = pos.second + neighs[i].second;
+                if(row<N && col<N && row>=0 && col>=0 && visited[row][col]==false)
+                {
+                    visited[row][col] = true;
+                    q.push({{row,col},dist+1});
+                }
+            }
+	    }
+	}
+};

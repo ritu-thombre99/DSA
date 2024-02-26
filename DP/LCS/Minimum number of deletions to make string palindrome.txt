@@ -1,0 +1,27 @@
+Given a string 'str' of size ‘n’. The task is to remove or delete the minimum number of characters from the string so that the resultant string is a palindrome. Find the minimum numbers of characters we need to remove.
+Note: The order of characters should be maintained.
+
+
+to make string palindrome we find longest palindromic subsequence
+then delete characters which are not the part of LPS
+
+complexity same as LCS
+
+int minDeletions(string str, int n) { 
+    //complete the function here 
+    string X = str;
+    string Y = str;
+    reverse(Y.begin(),Y.end());
+    vector<vector<int>> dp(n+1, vector<int>(n+1,0));
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(X[i-1]==Y[j-1])
+                dp[i][j] = dp[i-1][j-1]+1;
+            else
+                dp[i][j] = max(dp[i][j-1], dp[i-1][j]);
+        }
+    }
+    return (n-dp[n][n]);
+} 

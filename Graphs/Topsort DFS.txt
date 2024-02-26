@@ -1,0 +1,37 @@
+Topological sort
+Method 1 - DFS
+O(V+E) TIme
+O(V) Space
+
+Idea - process all neighbours in dfs then print node
+class Solution
+{
+	public:
+	//Function to return list containing vertices in Topological order. 
+	void dfs(int node, vector<int> adj[], vector<bool> &visited, stack<int> &s)
+	{
+	    visited[node] = true;
+	    for(auto itr=adj[node].begin();itr!=adj[node].end();++itr)
+	        if(visited[*itr]==false)
+	            dfs(*itr,adj,visited,s);
+        s.push(node);
+	}
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    // code here
+	    vector<bool> visited;
+	    for(int i=0;i<V;i++)
+	        visited.push_back(false);
+	    stack<int> s;
+	    for(int i=0;i<V;i++)
+	        if(visited[i]==false)
+	            dfs(i,adj,visited,s);
+        vector<int> topsort;
+        while(!s.empty())
+        {
+            topsort.push_back(s.top());
+            s.pop();
+        }
+        return topsort;
+	}
+};

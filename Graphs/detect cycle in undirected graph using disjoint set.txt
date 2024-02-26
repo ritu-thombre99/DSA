@@ -1,0 +1,42 @@
+class Solution
+{
+    public:
+    //Function to detect cycle using DSU in an undirected graph.
+    int find(int parent[], int i)
+    {
+    	if (parent[i] == -1)
+    		return i;
+    	return find(parent, parent[i]);
+    }
+    
+    void Union(int parent[], int x, int y)
+    {
+    	parent[x] = y;
+    }
+	int detectCycle(int V, vector<int>adj[])
+	{
+	    // Code here
+	    vector<pair<int,int>> edges;
+	    for(int i=0;i<V;i++)
+	    {
+	        for(int j=0;j<adj[i].size();j++)
+	        {
+	            if(adj[i][j] > i)
+	                edges.push_back({i,adj[i][j]});
+	        }
+	    }
+	    int* parent = new int[V * sizeof(int)];
+	    memset(parent, -1, sizeof(int)*V);
+	    for(int i=0;i<edges.size();i++)
+	    {
+	        int src = edges[i].first;
+	        int dest = edges[i].second;
+	        int x = find(parent, src);
+		    int y = find(parent, dest);
+	        if (x == y)
+    			return 1;
+    		Union(parent, y, x);
+	    }
+	    return 0;
+	}
+};

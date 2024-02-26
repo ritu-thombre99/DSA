@@ -1,0 +1,73 @@
+Graph coloring greedy algorithm
+
+initialize color array to -1
+make color[0] = 0 (i,e color the first vertex)
+ 
+initialize available color array to true as all colors are currently available
+
+enter into loop for vertices from 2 to N (as 1st vertex is already colored)
+available [color] = false for vertices which have color != -1 (i.e they are already colored)
+
+loop color array and find the minimum index which has available set to true and assign that color to current node
+
+reset available array by setting available[color] = true for vertices which are colored
+
+Time complexity - outer loop runs for(V)
+		  inner two for loops run for e(where e are neighbours of nodes and eV =  E)
+		  coloring loop runs for another V in worst case if graph is completely connected (to find the minimum color which hasnt been used)
+
+Time - O(V^2 + E)
+Space - O(V) for color and available
+
+Greedy approach does not necessafrily colors graph in chromatic colors (i.e minimum number of colors required to color the graph) 
+it rather has an upper bound which is d+1 
+where d is the masimum degree of node in a graph
+if d colors are used by neighbours 
+then current node will be assigned d+1 th color
+
+
+void graph_coloring(vector<int> adj[], int V, vector<int> &color)
+{
+    // color first node
+    color[0] = 0;
+    vector<bool> available;
+    for(int i=0;i<V;i++)
+        available.push_back(true);
+    // color from 2nd node
+    for(int u=1;u<V;u++)
+    {
+        for(auto itr = adj[u].begin();itr!=adj[u].end();itr++)
+            if(color[*itr] != -1)
+                available[color[*itr]] = false;
+
+        int cr;
+        for (cr = 0; cr < V; cr++)
+            if (available[cr] == true)
+                break;
+
+        color[u] = cr;
+        for(auto itr = adj[u].begin();itr!=adj[u].end();itr++)
+            if(color[*itr] != -1)
+                available[color[*itr]] = true;
+    }
+}
+int main()
+{
+    int V = 8;
+    vector<int> adj[V];
+    // vector<pair<int,int>> edges { {0,1},{0,5},{0,6},{2,1},{2,3},{4,3},{4,5},{6,7},{5,7}};  // even length cycle still bipartite
+    vector<pair<int,int>> edges { {0,1},{0,5},{0,6},{0,7},{2,1},{2,3},{4,3},{4,5},{6,7}};   // odd length cycle requires more than 2 colors
+    for(int i=0;i<edges.size();i++)
+    {
+        int u = edges[i].first;
+        int v = edges[i].second;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    vector<int> color;
+    for(int i=0;i<V;i++)
+        color.push_back(-1);
+    graph_coloring(adj, V, color);
+    for(int i=0;i<V;i++)
+        cout<<i<<"->"<<color[i]<<endl;
+    return 0;

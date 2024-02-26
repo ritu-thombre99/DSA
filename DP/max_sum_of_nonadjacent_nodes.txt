@@ -1,0 +1,21 @@
+class Solution{
+  public:
+    //Function to return the maximum sum of non-adjacent nodes.
+    unordered_map<Node*,int> u;
+    int getMaxSum(Node *root) 
+    {
+        if(!root)
+            return 0;
+        if(u[root])
+            return u[root];
+        int inc = root->data;
+        if(root->left)
+            inc = inc + getMaxSum(root->left->left)+ getMaxSum(root->left->right);
+        if(root->right)
+            inc = inc + getMaxSum(root->right->left)+ getMaxSum(root->right->right);
+        int exc = getMaxSum(root->left)+getMaxSum(root->right);
+        u[root] = max(inc, exc);
+        return max(inc,exc);
+        // Add your code here
+    }
+};

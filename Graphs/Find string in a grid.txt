@@ -1,0 +1,52 @@
+Given a 2D grid of n*m of characters and a word, find all occurrences of given word in grid. A word can be matched in all 8 directions at any point. Word is said be found in a direction if all characters match in this direction (not in zig-zag form). The 8 directions are, horizontally left, horizontally right, vertically up, vertically down and 4 diagonal directions.
+ 
+Solution - dfs every cell which starts with word[0]
+no need to use visited
+traverse in all 8 directions (no zig zags) and check if it forms a string which equals to word
+
+Complexity - O(row*col*8*len(word))
+traverse every cell and all 8 direction len(word) times
+
+class Solution {
+public:
+    bool search(int x, int y, vector<vector<char>> grid, string word)
+    {
+        vector<int> r{1,1,-1,-1,0,0,1,-1};
+	    vector<int> c{1,-1,1,-1,1,-1,0,0};
+	    for(int k=0;k<8;k++)
+	    {
+	        int n = word.size();
+	        string s = "";
+	        int i=x,j=y;
+	        while(true)
+	        {
+	            if(s.size() == word.size() && s == word)
+	                return true;
+                if(i<0 || j<0 || i>=grid.size() || j>=grid[0].size())
+                    break;
+                if(grid[i][j] != word[s.size()])
+                    break;
+                s = s + grid[i][j];
+                i = i + r[k];
+                j = j + c[k];
+	        }
+	    }
+	    return false;
+    }
+	vector<vector<int>>searchWord(vector<vector<char>>grid, string word){
+	    // Code here
+	    vector<vector<int>> v;
+	    for(int i=0;i<grid.size();i++)
+	    {
+	        for(int j=0;j<grid[0].size();j++)
+            {
+	            if(grid[i][j] == word[0] && search(i,j,grid,word)==true)
+	            {
+	                vector<int> temp{i,j};
+	                v.push_back(temp);
+	            }
+            }
+	    }
+	    return v;
+	}
+};

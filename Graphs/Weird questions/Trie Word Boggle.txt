@@ -1,0 +1,108 @@
+Time complexity: O(4^(N^2)). 
+Even after applying trie the time complexity remains same. For every cell there are 4 directions and there are N^2 cells. So the time complexity is O(4^(N^2)).
+Auxiliary Space: O(N^2). 
+The maximum length of recursion can be N^2, where N is the side of the matrix. So the space Complexity is O(N^2).
+
+class Solution {
+public:
+    typedef struct Node
+    {
+        bool leaf;
+        struct Node *children[26];
+    }Node;
+    
+    Node *new_node()
+    {
+        Node *node = new Node();
+        node->leaf = false;
+        for(int i=0;i<26;i++)
+            node->children[i] = NULL;
+        return node;
+    }
+    
+    void insert(Node **root, string key)
+    {
+        Node *ptr = *root;
+        for(int i=0;i<key.length();i++)
+        {
+            int index = key[i] - 'a';
+            if(!ptr->children[index])
+                ptr->children[index] = new_node();
+            ptr = ptr->children[index];
+        }
+        ptr->leaf = true;
+    }
+    
+    bool search(Node *root, string key)
+    {
+        Node *ptr = root;
+        for(int i=0;i<key.length();i++)
+        {
+            int index = key[i] - 'a';
+            if(!ptr->children[index])
+                return false;
+            ptr = ptr->children[index];
+        }
+        return ptr->leaf;
+    }
+    vector<int> r{1,-1,1,-1,0,-1,1,0};
+    vector<int> c{1,1,-1,-1,-1,0,0,1};
+    bool searchWord(Node* root, vector<vector<char>> &board, int i,int j, string str, vector<string> &v)
+    {
+        if (root && root->leaf == true)
+        {
+            v.push_back(str);
+            return true;
+        }
+
+        char org = board[i][j];
+        board[i][j] = '.';
+        for (int K = 0; K < 26; K++) 
+        {
+            if (root && root->children[K] != NULL) 
+            {
+                char ch = (char)K + (char)'a';
+                for(int dir=0;dir<8;dir++)
+                {
+                    int row = i + r[dir];
+                    int col = j + c[dir];
+                    if (row>=0 && col>=0 && row<board.size() && col<board[0].size() && board[row][col] == ch)
+                    {
+                        if(searchWord(root->children[K], board, row, col, str + ch,v)==true)
+                        {
+                            // board[i][j] = org;
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        board[i][j] = org;
+        return false;
+    }
+    void findWords(vector<vector<char>>& board, Node *root, vector<string> &v)
+    {
+        Node* pChild = root;
+        string str = "";
+        for (int i = 0; i < board.size(); i++) 
+        {
+            for (int j = 0; j < board[0].size(); j++) 
+            {
+                if(board[i][j]!='.' && pChild && pChild->children[board[i][j]-'a']) 
+                {
+                    str = str + board[i][j];
+                    searchWord(pChild->children[board[i][j]-'a'],board, i, j, str, v);
+                    str = "";
+                }
+            }
+        }
+    }
+	vector<string> wordBoggle(vector<vector<char> >& board, vector<string>& dictionary) {
+	    // Code here
+	    vector<string> v;
+	    Node *root = new_node();
+        for(int i=0;i<dictionary.size();i++)
+            insert(&root,dictionary[i]);
+	    findWords(board,root,v);
+        return v;
+	}

@@ -1,0 +1,63 @@
+
+A graph is biconnected if
+1. there are no articulation points
+2. there are no disconnected components
+
+
+class Solution {
+  public:
+    bool APUtil(vector<int> adj[], int u, int disc[], int low[], bool visited[],
+                int& discovery_time, int parent)
+    {
+        int children = 0;
+        visited[u] = true;
+        low[u] = disc[u] = ++discovery_time;
+        for(int i=0;i<adj[u].size();i++)
+        {
+            int v = adj[u][i];
+            if(!visited[v])
+            {
+                children += 1;
+                if(APUtil(adj, v, disc, low, visited, discovery_time, u)==true)
+                    return true;
+                low[u] = min(low[u], low[v]);
+                if (parent == -1 && children > 1) // exlude root node and a lonely abondoned node by itself with no children
+                    return true;
+                if (parent != -1 && low[v] >= disc[u])
+                    return true;
+                
+            }
+            else if (v != parent)
+                low[u] = min(low[u], disc[v]);
+        }
+        return false;
+    }
+    int biGraph(int arr[], int n, int e) {
+        // code here
+        if(n > 2*e)
+            return 0;
+        if(e==1)
+            return 1;
+        vector<int> adj[n];
+        for(int i=0;i<2*e;i=i+2)
+        {
+            adj[arr[i]].push_back(arr[i+1]);
+            adj[arr[i+1]].push_back(arr[i]);
+        }
+        int disc[n] = {-1}, low[n]={-1};
+        bool visited[n] = {false};
+        int t=0, components = 0;
+        for(int i=0;i<n;i++)
+        {
+            if(!visited[i])
+            {
+                components+=1;
+                if(APUtil(adj, i, disc, low, visited, t, -1)==true)
+                    return 0;
+            }
+        }
+        if(components==1)
+            return 1;
+        return 0;
+    }
+};

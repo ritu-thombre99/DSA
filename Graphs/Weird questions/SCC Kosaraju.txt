@@ -1,0 +1,58 @@
+Kosaraju's algorithm - 
+To count number of strongly connected components in a graph.
+Strongly connected components - mutually exclusive sets of vertices such that for every pair of vertx (u,v) in a set, there exists path from u->v and from v->u.
+We can exploit this fact
+We first run DFS on the original graph, pushing the node into a stack into once it is processed completely (i.e all its neigbhours are processed)
+
+We then transpose original graph(reverse edges) 
+now we pop a node from stack and run dfs on it (if entire graph is SCC then dfs tree will be created else dfs forest is created and each tree is the SCC as there was a path from u->v in original graph but no path from v->u in transposed graph)    
+
+
+void topsort(int u, vector<bool> &visited, stack<int> &s, vector<int> adj[])
+	{
+	    visited[u] = true;
+	    for(int i=0;i<adj[u].size();i++)
+	    {
+	        int v = adj[u][i];
+	        if(!visited[v])
+	            topsort(v,visited,s,adj);
+	    }
+	    s.push(u);
+	}
+	void dfs(int u, vector<bool> &visited, vector<int> adj[])
+	{
+	    visited[u] = true;
+	    for(int i=0;i<adj[u].size();i++)
+	    {
+	        int v = adj[u][i];
+	        if(!visited[v])
+	            dfs(v,visited,adj);
+	    }
+	}
+    int kosaraju(int V, vector<int> adj[])
+    {
+        //code here
+        stack<int> s;
+        vector<bool> visited(V,false);
+        for(int i=0;i<V;i++)
+            if(!visited[i])
+                topsort(i,visited,s,adj);
+        // reset visited
+        for(int i=0;i<V;i++)
+            visited[i] = false;
+        // tranpose graph
+        vector<int> adj_transpose[V];
+        for(int i=0;i<V;i++)
+            for(int j=0;j<adj[i].size();j++)
+                adj_transpose[adj[i][j]].push_back(i);
+        int count = 0;
+        while(!s.empty())
+        {
+            int u = s.top();
+            s.pop();
+            if(!visited[u])
+                count++,dfs(u,visited,adj_transpose);
+        }
+        return count;
+        
+    }

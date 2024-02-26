@@ -1,0 +1,46 @@
+Time complexity of this solution is O(m*n*k). 
+
+backtracking leads to exponential complexity
+so we do dp
+pathCount(m, n, k):   Number of paths to reach mat[m][n] from mat[0][0] 
+                      with exactly k coins
+
+If (m == 0 and n == 0)
+   return 1 if mat[0][0] == k else return 0
+Else:
+    pathCount(m, n, k) = pathCount(m-1, n, k - mat[m][n]) + 
+                         pathCount(m, n-1, k - mat[m][n]) 
+Top down approach
+class Solution {
+public:
+    long long solve(vector<vector<int>> &arr,vector<vector<vector<long long>>> &dp,int m, int n,int k)
+    {
+        if (m < 0 || n < 0 || k < 0) 
+            return 0;
+        if (m==0 && n==0) 
+            return (k == arr[m][n]);
+        if (dp[m][n][k] != -1) 
+            return dp[m][n][k];
+        dp[m][n][k] = solve(arr,dp, m-1, n, k-arr[m][n])+solve(arr,dp, m, n-1, k-arr[m][n]);
+        return dp[m][n][k];
+    }
+    long long numberOfPath(int n, int k, vector<vector<int>> arr){
+        
+        // Code Here
+        vector<vector<vector<long long>>> dp;
+        for(int i=0;i<n;i++)
+        {
+            vector<vector<long long>> temp1;
+            for(int j=0;j<n;j++)
+            {
+                vector<long long> temp2;
+                for(int l=0;l<=k;l++)
+                    temp2.push_back(-1);
+                temp1.push_back(temp2);
+            }
+            dp.push_back(temp1);
+        }
+        // vector<vector<vector<long long>>> dp(n,vector<vector<long long>> (n,vector<long long> (k+1,-1)));
+        return solve(arr,dp,n-1,n-1,k);
+    }
+};

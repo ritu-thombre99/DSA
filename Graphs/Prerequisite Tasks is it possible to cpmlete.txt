@@ -1,0 +1,87 @@
+There are a total of N tasks, labeled from 0 to N-1. Some tasks may have prerequisites, for example to do task 0 you have to first complete task 1, which is expressed as a pair: [0, 1]
+Given the total number of tasks N and a list of prerequisite pairs P, find if it is possible to finish all tasks.
+
+
+
+Topological sort can be done only on DAGs(Directed Acyclic Graphs)
+so we just need to check if there is cycle in a grap
+we first create directed graph using given pair -> adj[node] will contain all its dependencies
+
+then we can check for cycle either using DFS of BFS
+
+Method 1 - DFGS solution
+
+class Solution {
+public:
+	bool isPossible(int N, vector<pair<int, int> >& prerequisites) {
+	    // Code here
+	    vector<vector<int>> adj;
+	    for(int i=0;i<N;i++)
+	    {
+	        vector<int> v;
+	        adj.push_back(v);
+	    }
+	    for(int i=0;i<prerequisites.size();i++)
+	        adj[prerequisites[i].second].push_back(prerequisites[i].first);
+        vector<int> in_degree;
+        for(int i=0;i<N;i++)
+            in_degree.push_back(0);
+	    for(int i=0;i<adj.size();i++)
+	    {
+	        for(int j=0;j<adj[i].size();j++)
+	            in_degree[adj[i][j]] += 1;
+	    }
+        queue<int> q;
+        for(int i=0;i<in_degree.size();i++)
+            if(in_degree[i] == 0)
+                q.push(i);
+        int nodes = 0;
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            nodes++;
+            for(int i=0;i<adj[node].size();i++)
+            {
+	            in_degree[adj[node][i]] -= 1;
+                if(in_degree[adj[node][i]] == 0)
+                    q.push(adj[node][i]);
+            }
+        }
+	    return (nodes == N);
+	}
+};
+
+
+Method 2 - BFS solution
+
+bool dfs(int node, vector<int> adj[], vector<bool> &visited, vector<bool> &s)
+    {
+        visited[node] = true;
+        s[node] = true;
+        for(int i=0;i<adj[node].size();i++)
+        {
+            if(visited[adj[node][i]]==false &&  dfs(adj[node][i],adj,visited,s) == true)
+               return true;
+            else if(s[adj[node][i]] == true)
+                return true;
+        }
+        s[node] = false;
+        return false;
+    }
+	bool isPossible(int N, vector<pair<int, int> >& prerequisites) {
+	    // Code here
+	    vector<int>adj[N];
+	    for(int i=0; i<prerequisites.size(); i++){
+	        int u = prerequisites[i].first, v = prerequisites[i].second;
+	        adj[v].push_back(u);
+	    }
+	    vector<bool>visited(N,false);
+	    vector<bool>s(N,false);
+        for(int i=0;i<N;i++)
+            if(visited[i] == false && dfs(i,adj,visited,s)==true)
+                return false;
+        return true;
+        
+	}
+};

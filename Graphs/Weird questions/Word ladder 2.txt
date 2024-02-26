@@ -1,0 +1,84 @@
+Given two distinct words startWord and targetWord, and a list denoting wordList of unique words of equal lengths. Find all shortest transformation sequence(s) from startWord to targetWord. You can return them in any order possible.
+Keep the following conditions in mind:
+
+A word can only consist of lowercase characters.
+Only one letter can be changed in each transformation.
+Each transformed word must exist in the wordList including the targetWord.
+startWord may or may not be part of the wordList.
+Return an empty list if there is no such transformation sequence.
+
+
+do bfs (no need to use size-- as we dont have to keep track of level this time)
+just use map<string,int> to denote the level and string formed
+
+Complexity = N*M*26
+if order is used then NlogN*M*26
+
+class Solution {
+public:
+   vector<string> path;
+   void dfs(string str,string end,unordered_map<string,vector<string>> &mp,vector<vector<string>> &ans){
+       
+       path.push_back(str);
+       if(str == end){
+           ans.push_back(path);
+           return;
+       }
+       
+       for(string choice: mp[str]){
+           dfs(choice,end,mp,ans);
+           path.pop_back();
+       }
+   }
+   
+   vector<vector<string>> findSequences(string beginWord, string endWord, vector<string>& wordList) {
+       unordered_set<string> s;
+       for(int i = 0; i < wordList.size(); i++){
+           s.insert(wordList[i]);
+       }
+       
+       s.erase(beginWord);
+       
+       if(s.find(endWord) == s.end()) 
+            return (vector<vector<string>>{});
+       
+       unordered_map<string,vector<string>> mp;
+       unordered_map<string,int> dis;
+       dis[beginWord] = 1;
+       queue<string> q;
+       q.push(beginWord);
+       
+       while(!q.empty()){
+           string str = q.front();
+           q.pop();
+           
+           string temp = str;
+           
+           for(int i = 0; i < str.length(); i++){
+               char org = str[i];
+               for(char ch = 'a'; ch <= 'z'; ch++){
+                   if(ch == org) 
+                        continue;
+                   str[i] = ch;
+                   
+                   if(s.find(str) == s.end()) 
+                        continue;
+                   if(!dis[str]){
+                       dis[str] = dis[temp] + 1;
+                       q.push(str);
+                       mp[temp].push_back(str);
+                   }
+                   else if(dis[str] == dis[temp] + 1){
+                       mp[temp].push_back(str);
+                   }
+               }
+               str[i] = org;
+           }
+       }
+       
+       vector<vector<string>> ans;
+       dfs(beginWord,endWord,mp,ans);
+       
+       return (ans);
+   }
+};

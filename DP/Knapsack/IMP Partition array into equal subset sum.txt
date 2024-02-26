@@ -1,0 +1,98 @@
+// same as knapsack
+weight = sum/2
+values = array elements
+
+Complexity - O(sum*n)
+class Solution{
+public:
+    bool util(vector<vector<int>> &dp, int n, int w, int arr[])
+    {
+        if(w==0)
+            return true;
+        if(n==0)
+            return false;
+        if(dp[n][w] != -1)
+            return dp[n][w];
+        if(arr[n] <= w)
+        {
+            dp[n][w] = util(dp,n-1,w-arr[n],arr)||util(dp,n-1,w,arr);
+            return dp[n][w];
+        }
+        else
+            return util(dp,n-1,w,arr);
+    }
+    int equalPartition(int n, int arr[])
+    {
+        // code here
+        int sum = 0;
+	    for(int i=0;i<n;i++)
+	        sum += arr[i];
+        if(sum%2 != 0)
+            return 0;
+        vector<vector<int>> dp;
+        for(int i=0;i<n;i++)
+        {
+            vector<int> temp;
+            for(int j=0;j<=sum/2;j++)
+                temp.push_back(-1);
+            dp.push_back(temp);
+        }
+        return util(dp,n-1,sum/2, arr);
+    }
+};
+
+
+// tabularization solution
+class Solution{
+public:
+    int equalPartition(int n, int arr[])
+    {
+        // code here
+        int sum = 0;
+	    for(int i=0;i<n;i++)
+	        sum += arr[i];
+        if(sum%2 != 0)
+            return 0;
+        vector<vector<int>> dp(n, vector<int> (sum/2 + 1, 0));
+        for(int i=0;i<n;i++)
+            dp[i][0] = 1; // subset sum=0 is possible
+        for(int i=1;i<n;i++)
+        {
+            for(int j=1;j<=sum/2;j++)
+            {
+                if(arr[i]<=j)
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-arr[i]];
+                else
+                    dp[i][j] = dp[i-1][j];
+            }
+        }
+        return dp[n-1][sum/2];
+    }
+};
+
+// space optimized tabularization - dp[sum/2]
+
+The idea is that we can check if the sum till position “i” is possible then if the current element in the array at position j is x, then sum i+x is also possible. We traverse the sum array from back to front so that we don’t count any element twice. 
+
+
+
+class Solution{
+public:
+    int equalPartition(int n, int arr[])
+    {
+        // code here
+        int sum = 0;
+	    for(int i=0;i<n;i++)
+	        sum += arr[i];
+        if(sum%2 != 0)
+            return 0;
+        
+        vector<int> dp(sum/2 + 1, 0);
+        dp[0] = 1; // sum=0 always possible
+        for(int i=0;i<n;i++)
+            for(int j=sum/2;j>=arr[i];j--)
+                if(dp[j-arr[i]]==1) // if curr_sum(j) + array element = required sum then current array element contributes to creating partition else no
+                    dp[j] = 1;
+        return dp[sum/2];
+    }
+};

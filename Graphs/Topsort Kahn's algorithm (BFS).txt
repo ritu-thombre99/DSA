@@ -1,0 +1,55 @@
+Topological sort
+Method 2
+Kahn's algorithm
+O(V+E) - Time
+O(V) - Space
+
+Idea - Use indegree count for each node (initialize to 0)
+if node has incoming edge then increment the indegree for that node using for loop and adjacent vector
+
+
+push all the nodes that have indeghree of 0 in a queue
+
+repeat while q is not empty
+1. pop top node
+2. decrement indegree for all the neighbous of this node by 1
+	indegree of any neigbour becomes 1, push it to queue
+
+
+Can also be used to detect cycle
+if topsort vector size is not equal to totoal number of vertices then there is a cycle
+
+class Solution
+{
+	public:
+	//Function to return list containing vertices in Topological order. 
+	
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    // code here
+	    vector<int> in_degree(V,0);
+	    vector<int> topsort;
+	    for(int i=0;i<V;i++)
+	    {
+	        for(int j = 0;j<adj[i].size();j++)
+	            in_degree[adj[i][j]]++;
+	    }
+	    queue<int> q;
+	    for(int i=0;i<V;i++)
+	        if(in_degree[i]==0)
+	            q.push(i);
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            topsort.push_back(node);
+            for(int j = 0;j<adj[node].size();j++)
+            {
+                in_degree[adj[node][j]] = in_degree[adj[node][j]] - 1;
+                if(in_degree[adj[node][j]]==0)
+                    q.push(adj[node][j]);
+            }
+        }
+        return topsort;
+	}
+};

@@ -1,0 +1,51 @@
+class Solution {
+  public:
+    // Function to find the number of islands.
+    void bfs(int x,int y,int n, int m, vector<vector<bool>> &visited, vector<vector<char>> grid)
+    {
+        visited[x][y] = true;
+        
+        queue<pair<int,int>> q;
+        q.push({x,y});
+        while(!q.empty())
+        {
+            pair<int,int> temp = q.front();
+            q.pop();
+            int i = temp.first;
+            int j = temp.second;
+            vector<pair<int,int>> adj{{i-1,j-1},{i-1,j+1},{i+1,j-1},{i+1,j+1},
+                                  {i-1,j},{i+1,j},{i,j-1},{i,j+1}};
+            for(int v=0;v<adj.size();v++)
+            {
+                int row = adj[v].first;
+                int col = adj[v].second;
+                if(row<n && row>=0 && col<m && col>=0 && visited[row][col]==false && grid[row][col]=='1')
+                {
+                    visited[row][col] = true;
+                    q.push({row,col});
+                }
+            }
+        }
+    }
+    int numIslands(vector<vector<char>>& grid) {
+        // Code here
+        vector<vector<bool>> visited;
+        int n = grid.size();
+        int m = grid[0].size();
+        for(int i=0;i<n;i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<m;j++)
+                temp.push_back(false);
+            visited.push_back(temp);
+        }
+        int islands = 0;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+                if(grid[i][j]=='1' && visited[i][j]==false)
+                    islands=islands+1,bfs(i,j,n,m,visited,grid);
+        }
+        return islands;
+    }
+};

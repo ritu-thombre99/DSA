@@ -1,0 +1,65 @@
+Given a 2D board of letters and a word. Check if the word exists in the board. The word can be constructed from letters of adjacent cells only. ie - horizontal or vertical neighbors. The same letter cell can not be used more than once.
+
+Solution using Backtracking and dfs
+if not used backtracking then geep will be marked visited and gee
+								k cannot be found out
+so we have to use backtracking
+
+nested for loop runs (M*N) times
+and dfs runs (4^L) we are traversing 4 directions (multiple times due to backtracking) raised to length of word
+
+therefor complexity is M*N*(4^L)
+class Solution {
+public:
+
+    void dfs(int curr_x, int curr_y, vector<vector<char>>& board, string word
+                ,string s,int len, bool &exist, vector<vector<bool>> &visited)
+    {
+        if (len > word.size() || board[curr_x][curr_y] != word[len])
+            return;
+        s = s + board[curr_x][curr_y];
+        visited[curr_x][curr_y] = true;
+        if(s.size()==word.size())
+        {
+            exist = true;
+            return;
+        }
+        vector<int> r{0,0,1,-1};
+        vector<int> c{1,-1,0,0};
+        for(int i=0;i<4;i++)
+        {
+            int row = curr_x + r[i];
+            int col = curr_y + c[i];
+            if(row<board.size() && col<board[0].size() && row>=0 && col>=0)
+                if(visited[row][col] == false)
+                    dfs(row,col,board,word,s,len+1,exist,visited);
+        }
+        visited[curr_x][curr_y] = false;
+    }
+    bool isWordExist(vector<vector<char>>& board, string word) 
+    {
+        // Code here
+        vector<vector<bool>> visited;
+	    for(int i=0;i<board.size();i++)
+	    {
+	        vector<bool> temp;
+	        for(int j=0;j<board[0].size();j++)
+	            temp.push_back(false);
+            visited.push_back(temp);
+	    }
+        bool exist = false;
+        for(int i=0;i<board.size();i++)
+        {
+            for(int j=0;j<board[0].size();j++)
+            {
+                if((board[i][j] == word[0]))
+                {
+                    dfs(i,j,board,word,"",0,exist,visited);
+                    if(exist==true)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+};

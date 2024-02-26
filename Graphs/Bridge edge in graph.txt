@@ -1,0 +1,44 @@
+Given a Graph of V vertices and E edges and another edge(c - d), the task is to find if the given edge is a Bridge. i.e., removing the edge disconnects the graph.
+
+Complexity - O(V+E)
+same as bfs
+counr previos graph components
+remove edge cd
+count new graph components
+if equal edge not bridge
+
+class Solution
+{
+	public:
+    //Function to find if the given edge is a bridge in graph.
+    void dfs(int node, vector<int> adj[], vector<bool> &visited)
+    { 
+        visited[node] = true;
+        for(int i=0;i<adj[node].size();i++)
+            if(visited[adj[node][i]]==false)
+                dfs(adj[node][i],adj,visited);
+    }
+    int isBridge(int V, vector<int> adj[], int c, int d) 
+    {
+        int graphs = 0;
+        vector<bool> visited;
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        for(int i=0;i<V;i++)
+            if(visited[i] == false)
+                graphs=graphs+1, dfs(i,adj,visited);
+        // Code here
+        adj[c].erase(find(adj[c].begin(),adj[c].end(),d));
+        adj[d].erase(find(adj[d].begin(),adj[d].end(),c));
+        int new_graphs = 0;
+        visited.clear();
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        for(int i=0;i<V;i++)
+            if(visited[i] == false)
+                new_graphs=new_graphs+1, dfs(i,adj,visited);
+        if(graphs==new_graphs)
+            return 0;
+        return 1;
+    }
+};

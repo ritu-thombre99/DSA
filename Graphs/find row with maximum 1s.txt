@@ -1,0 +1,27 @@
+class Solution{
+public:
+	int rowWithMax1s(vector<vector<int> > arr, int n, int m) {
+	    // code here
+	    int R = arr.size();
+	    int C = arr[0].size();
+	    int j = C-1;
+	    int max_row_index = -1;
+	    for(int i=0;i<R;i++)
+	    {
+	        bool more_ones_found = false;
+	        if(arr[i][j]==1)
+	        {
+	            more_ones_found = true;
+    	        while(arr[i][j] == 1)
+    	            j = j - 1;
+	        }
+	        if(more_ones_found == true)
+	            max_row_index = i;
+	            
+            
+	    }
+	    return max_row_index;
+	}
+
+};
+O(M+N)

@@ -1,0 +1,64 @@
+Given an array of lowercase strings A[] of size N, determine if the strings can be chained together to form a circle.
+A string X can be chained together with another string Y if the last character of X is same as first
+character of Y. If every string of the array can be chained, it will form a circle.
+
+O(26)
+edge = Ai[0]->Ai[last]
+
+check if graph has eulerian circuit
+class Solution
+{
+    public:
+    void dfs(int u, vector<int> adj[], vector<bool> &visited)
+    {
+        visited[u] = true;
+        for(int i=0;i<adj[u].size();i++)
+        {
+            int v = adj[u][i];
+            if(!visited[v])
+                dfs(v,adj,visited);
+        }
+    }
+    int isCircle(int N, vector<string> A)
+    {
+        // code here
+        vector<int> adj[26];
+        vector<int> in_degree(26,0);
+        for(int i=0;i<A.size();i++)
+        {
+            int u = A[i][0]-'a';
+            int v = A[i].back()-'a';
+            in_degree[v] += 1;
+            adj[u].push_back(v);
+        }
+        for(int i=0;i<26;i++)
+            if(adj[i].size() != in_degree[i]) // in_degree!=out_degree
+                return 0;
+        vector<bool> visited(26,false);
+        int source;
+        for(source=0;source<26;source++)
+            if(adj[source].size()>0)
+                break;
+        dfs(source,adj,visited);
+        for(int i=0;i<26;i++)
+            if(!visited[i] && adj[i].size()>0)
+                return 0; // graph not connected
+        
+        vector<int> transpose_adj[26];
+        for(int u=0;u<26;u++)
+        {
+            for(int i=0;i<adj[u].size();i++)
+            {
+                int v = adj[u][i];
+                transpose_adj[v].push_back(u);
+            }
+        }
+        for(int i=0;i<26;i++)
+            visited[i] = false;
+        dfs(source,transpose_adj,visited);
+        for(int i=0;i<26;i++)
+            if(!visited[i] && adj[i].size()>0)
+                return 0; // graph not SCC
+        return 1;
+    }
+};

@@ -1,0 +1,62 @@
+Given two distinct words startWord and targetWord, and a list denoting wordList of unique words of equal lengths. Find the length of the shortest transformation sequence from startWord to targetWord.
+Keep the following conditions in mind:
+
+A word can only consist of lowercase characters.
+Only one letter can be changed in each transformation.
+Each transformed word must exist in the wordList including the targetWord.
+startWord may or may not be part of the wordList.
+
+
+Approach: The idea to solve the problem is to use BFS. To find the shortest path through BFS, start from the start word and push it in a queue. And once the target is found for the first time, then return that level of BFS traversal. In each step of BFS one can get all the words that can be formed using that many steps. So whenever the target word is found for the first time that will be the length of the shortest chain of words.
+
+
+Start from the given start word.
+Push the word in the queue
+Run a loop until the queue is empty
+Traverse all words that adjacent (differ by one character) to it and push the word in a queue (for BFS)
+Keep doing so until we find the target word or we have traversed all words.
+
+Time Complexity: O(N² * M), where M is the number of entries originally in the dictionary and N is the size of the string.
+Auxiliary Space: O(M * N)
+
+class Solution {
+public:
+    int wordLadderLength(string startWord, string targetWord, vector<string>& wordList) {
+        // Code here
+        if(startWord==targetWord)
+            return 0;
+        if(find(wordList.begin(),wordList.end(),targetWord) == wordList.end())
+            return 0;
+        queue<string> q;
+        q.push(startWord);
+        int level = 0;
+        while(!q.empty())
+        {
+            level = level + 1;
+            int size = q.size();
+            while(size--)
+            {
+                string word = q.front();
+                q.pop();
+                
+                for(int i=0;i<word.size();i++)
+                {
+                    char original_char = word[i];
+                    for(char c = 'a';c<'z';c++)
+                    {
+                        word[i] = c;
+                        if(word == targetWord)
+                            return level+1;
+                        if(find(wordList.begin(),wordList.end(),word) == wordList.end())
+                            continue;
+                        wordList.erase(find(wordList.begin(),wordList.end(),word));
+                        q.push(word);
+                    }
+                    word[i] = original_char;
+                }
+                
+            }
+        }
+        return 0;
+    }
+};

@@ -1,0 +1,23 @@
+There are N points on the road ,you can step ahead by 1 or 2 . Find the number of ways you can reach at point N. 
+
+using fibonacci as 1 or steps are allowed
+class Solution{
+	public:
+	    
+	    int fib(vector<int> &dp, int n)
+	    {
+	        if(dp[n]!=-1)
+	            return dp[n];
+            dp[n] = (fib(dp, n-1)+fib(dp, n-2))%(1000000007);
+            return dp[n];
+	    }
+		int nthPoint(int n){
+		    // Code here
+		    vector<int> dp(n+1,-1);
+		    dp[0]=0;
+		    dp[1]=1;
+		    dp[2]=2;
+		    fib(dp,n);
+		    return dp[n];
+		}
+};

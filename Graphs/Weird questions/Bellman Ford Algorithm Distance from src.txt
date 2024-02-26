@@ -1,0 +1,27 @@
+initially we set distance of eveyr node from source to INFINITY
+and distance of source from itself = 0
+now we repeat the following procedure for (V-1) times:
+
+for evry pair of node (u,v) if dist[u]+cost(u,v) < dist[v] then set dist[v] = dist[u]+cost(u,v)
+
+
+during each iteration, shortest path of some node is updated, leading to further shortest paths connected to that nodes either in same iteration or next iterations
+
+class Solution{
+	public:
+    vector <int> bellman_ford(int V, vector<vector<int>> adj, int S) {
+        // Code here
+        vector<int> dist(V,100000000);
+        dist[S] = 0;
+        for(int iter=0;iter<(V-1);iter++)
+        {
+            for(int i=0;i<adj.size();i++)
+            {
+                int u = adj[i][0], v = adj[i][1], w = adj[i][2];
+                if(dist[u]+w < dist[v])
+                    dist[v]=dist[u]+w;
+            }
+        }
+        return dist;
+    }
+};

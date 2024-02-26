@@ -1,0 +1,61 @@
+You are given two strings s and t. Now your task is to print all longest common sub-sequences in lexicographical order.
+
+
+Complexity - O(m*n) both time and space
+class Solution
+{
+	public:
+		vector<string> all_longest_common_subsequences(string s, string t)
+		{
+		    // Code here
+			// find LCS length first
+		    vector<vector<int>> dp(s.length()+1, vector<int> (t.length()+1,0));
+		    for(int i=1;i<=s.length();i++)
+		    {
+		        for(int j=1;j<=t.length();j++)
+		        {
+		            if(s[i-1]==t[j-1])
+		                dp[i][j] = dp[i-1][j-1]+1;
+	                else
+	                    dp[i][j] = max(dp[i][j-1], dp[i-1][j]);
+		        }
+		    }
+		
+	    // use dp to find all subsequences
+	    vector<vector<unordered_set<string>>> dp_ans(s.length()+1,vector<unordered_set<string>>(t.length()+1));
+
+	    // empty sets of strings as no common subseq if either of the strings or both the strings are empty
+	    for(int i = 0 ; i < s.length()+1 ; i++)
+                dp_ans[i][0].insert("");
+            for(int i = 0 ; i < t.length()+1 ; i++)
+                dp_ans[0][i].insert("");
+
+            for(int i = 1 ; i < s.length()+1 ; i++)
+            {
+                for(int j = 1 ; j < t.length()+1 ; j++)
+                {
+                    if(s[i-1] == t[j-1])
+                    {
+                        for(auto it : dp_ans[i-1][j-1])
+                            dp_ans[i][j].insert(it+s[i-1]); // add current character to previous set
+                    }
+                    if(dp[i][j] == dp[i-1][j])
+                    {
+                        for(auto it : dp_ans[i-1][j])
+                            dp_ans[i][j].insert(it);  // same as previous set
+                    }
+                    if(dp[i][j] == dp[i][j-1])
+                    {
+                        for(auto it : dp_ans[i][j-1])
+                            dp_ans[i][j].insert(it);    // same as previous set
+                    }
+                }
+            }
+            vector<string> ans;
+            for(auto it : dp_ans[s.length()][t.length()])
+                if(it!="") 
+                    ans.push_back(it);
+            sort(ans.begin() , ans.end());
+		    return ans;
+	}
+};

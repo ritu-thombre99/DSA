@@ -1,0 +1,43 @@
+Bridge edge is an edge which if removed disconnects the graph into two components
+
+Approach -
+Discovery time of a node disc[node] is time at whicb it was processed while dfs
+Low[node] - Lowest numbered node that can be reached from node
+
+for a (parent->child) pair if LOWEST NODE reachable from child COMEST AFTER PARENT (i.e parent -> c1 <-> c2) then there is not path between that child and NODES THAT COME BEFORE PARENT
+so that edge has to be a bridge edge
+
+Complexity - O(V+E)
+
+void Graph::bridgeUtil(int u, bool visited[], int disc[], int low[], int parent)
+{
+	static int time = 0;
+	visited[u] = true;
+	disc[u] = low[u] = ++time;
+	list<int>::iterator i;
+	for (i = adj[u].begin(); i != adj[u].end(); ++i)
+	{
+		int v = *i;
+		if (!visited[v])
+		{
+			bridgeUtil(v, visited, disc, low, u);
+			low[u] = min(low[u], low[v]); // Tree edge-lowest node that current node can reach = lowest node its child can reach
+			if (low[v] > disc[u]) // now path between child(v) and ancestors of parent (u)
+				cout << u <<" " << v << endl;
+		}
+		else if (v != parent)
+			low[u] = min(low[u], disc[v]); // cross edge-lowest node current node can reach = discovery time of back edge's node
+	}
+}
+
+void Graph::bridge()
+{
+	// Mark all the vertices as not visited
+	bool visited[V]={false};
+	int disc[V], low[V];
+	for (int i = 0; i < V; i++)
+		if (visited[i] == false)
+			bridgeUtil(i, visited, disc, low, -1);
+}
+
+

@@ -1,0 +1,65 @@
+Is graph bipartite
+Bipartite graph peoperties:
+1. chromatic (minimum number required for vertex coloring) color = 2
+2. no odd cycles 
+3. vertices can be divided into two disjoint sets U,V where vertices in U are not neighbors
+
+Solution using BFS
+initialize color for all nodes = -1
+make color of node 0 = 0
+push 0 into queue
+
+repeat while q not empty
+	pop current node
+	for all neighbours which have no color(-1) assign it other color than curr node
+	if curr node and any neighbour have same color (i.e odd cycle) then graph is not bipartite
+
+Time complexity - same as bfs O(V+E)
+space complexity - O(V)
+
+class Solution {
+public:
+    void bfs(int node, vector<int>adj[],vector<int> &color, bool &is_bipartite)
+    {
+        queue<int> q;
+        q.push(node);
+        while(!q.empty())
+        {
+            int u = q.front();
+            q.pop();
+            for(int i=0;i<adj[u].size();i++)
+            {
+                int v = adj[u][i];
+                if(color[v]==-1)
+                {
+                    color[v] = 1 - color[u];
+                    q.push(v);
+                }
+                else if(color[v] == color[u])
+                {
+                    is_bipartite = false;
+                    return;
+                }
+            }
+        }
+    }
+	bool isBipartite(int V, vector<int>adj[]){
+	    // Code here
+	    vector<int> color;
+	    for(int i=0;i<V;i++)
+	        color.push_back(-1);
+        bool is_bipartite = true;
+        for(int i=0;i<V;i++)
+        {
+            if(color[i]==-1)
+            {
+                color[i] = 0;
+                bfs(i,adj,color,is_bipartite);
+                if(is_bipartite==false)
+                    return false;
+            }
+        }
+        return true;
+	}
+
+};

@@ -1,0 +1,95 @@
+An image is represented by a 2-D array of integers, each integer representing the pixel value of the image.
+
+Given a coordinate (sr, sc) representing the starting pixel (row and column) of the flood fill, and a pixel value newColor, "flood fill" the image.
+
+To perform a "flood fill", consider the starting pixel, plus any pixels connected 4-directionally to the starting pixel of the same color as the starting pixel, plus any pixels connected 4-directionally to those pixels (also with the same color as the starting pixel), and so on. Replace the color of all of the aforementioned pixels with the newColor.
+
+Method 1 - BFS
+Using queue
+push all four neighbours which are unvisited with required previous color to queue and mark it visited and also change their color to new color
+
+Complexity - row * col
+
+class Solution {
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        // Code here 
+        int check_color = image[sr][sc];
+        queue<pair<int,int>> q;
+        vector<vector<bool>> visited;
+        for(int i=0;i<image.size();i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<image[0].size();j++)
+                temp.push_back(false);
+            visited.push_back(temp);
+        }
+        q.push({sr,sc});
+        visited[sr][sc] = true;
+        image[sr][sc] = newColor;
+        while(!q.empty())
+        {
+            pair<int,int> pos = q.front();
+            q.pop();
+            vector<pair<int,int>> n{{pos.first+1,pos.second},{pos.first-1,pos.second},
+                                    {pos.first,pos.second+1},{pos.first,pos.second-1}};
+            for(int i=0;i<n.size();i++)
+            {
+                int row = n[i].first;
+                int col = n[i].second;
+                if(row<image.size() && row>=0 && col<image[0].size() && col>=0 
+                    && visited[row][col]==false && image[row][col] == check_color)
+                {
+                    image[row][col] = newColor;
+                    q.push({row,col});
+                    visited[row][col] = true;
+                }
+            }
+        }
+        return image;
+    }
+};
+
+
+Method 2 - DFS
+
+recursively call dfs on valid (i.e unvisited and required color) neighbours
+
+class Solution {
+public:
+    void dfs(pair<int,int> pos, vector<vector<int>>& image, vector<vector<bool>> &visited, int check_color, int newColor)
+    {
+        
+        if(image[pos.first][pos.second]==check_color)
+            image[pos.first][pos.second] = newColor;
+        else
+            return;
+        visited[pos.first][pos.second] = true;
+        vector<pair<int,int>> n{{pos.first+1,pos.second},{pos.first-1,pos.second},
+                                    {pos.first,pos.second+1},{pos.first,pos.second-1}};
+        
+        for(int i=0;i<n.size();i++)
+        {
+            int row = n[i].first;
+            int col = n[i].second;
+            if(row<image.size() && row>=0 && col<image[0].size() && col>=0 && visited[row][col]==false && image[row][col] == check_color)
+                dfs({row,col},image,visited,check_color,newColor);
+        }
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        // Code here 
+        int check_color = image[sr][sc];
+        queue<pair<int,int>> q;
+        vector<vector<bool>> visited;
+        for(int i=0;i<image.size();i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<image[0].size();j++)
+                temp.push_back(false);
+            visited.push_back(temp);
+        }
+        dfs({sr,sc},image,visited,check_color,newColor);
+        return image;
+    }
+};
+

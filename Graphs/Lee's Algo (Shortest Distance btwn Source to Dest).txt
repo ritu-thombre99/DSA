@@ -1,0 +1,62 @@
+Given a 2D binary matrix A(0-based index) of dimensions NxM. Find the minimum number of steps required to reach from (0,0) to (X, Y).
+Note: You can only move left, right, up and down, and only through cells that contain 1.
+
+Idea is to use modified BFS
+BFS only considers one path at a time
+Lee's algorithm takes into account all 4 path at once and mark them visited (i.e mark neighbors visited when pushing them to queue) instead of marking them visited after popping from the queue
+
+Since all paths are takes into account all at once, we are bound to reach shortest path
+
+Complexity - O(m*n)
+class Solution {
+  public:
+
+    int shortestDistance(int N, int M, vector<vector<int>> A, int X, int Y) {
+        // code here
+        if(A[0][0] == 0 || A[0][0] == 0) // source/dest are blocked
+            return -1;
+        vector<vector<bool>> visited;
+        for(int i=0;i<A.size();i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<A[i].size();j++)
+                temp.push_back(false);
+            visited.push_back(temp);
+        }
+        queue<pair<pair<int,int>,int>> q;
+        q.push({{0,0},0});
+        visited[0][0] = true;
+        while(!q.empty())
+        {
+            pair<pair<int,int>,int> temp = q.front();
+            q.pop();
+            pair<int,int> pos = temp.first;
+            int curr_x = pos.first, curr_y = pos.second;
+            int curr_dis = temp.second;
+            if(curr_x == X && curr_y == Y)
+                return curr_dis;
+            if(curr_x+1<N && visited[curr_x+1][curr_y]==false && A[curr_x+1][curr_y]==1)
+            {    
+                visited[curr_x+1][curr_y]=true;
+                q.push({{curr_x+1,curr_y},curr_dis+1});
+            }
+            if(curr_x-1>=0 && visited[curr_x-1][curr_y]==false && A[curr_x-1][curr_y]==1)
+            {
+                visited[curr_x-1][curr_y]=true;
+                q.push({{curr_x-1,curr_y},curr_dis+1});
+            }
+            if(curr_y+1<M && visited[curr_x][curr_y+1]==false && A[curr_x][curr_y+1]==1)
+            {
+                visited[curr_x][curr_y+1]=true;
+                q.push({{curr_x,curr_y+1},curr_dis+1});
+            }
+            if(curr_y-1>=0 && visited[curr_x][curr_y-1]==false && A[curr_x][curr_y-1]==1)
+            {
+                visited[curr_x][curr_y-1]=true;
+                q.push({{curr_x,curr_y-1},curr_dis+1});
+            }
+        }
+        return -1;
+        
+    }
+};

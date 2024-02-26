@@ -1,0 +1,39 @@
+class Solution {
+public:
+    void dfs(int node, vector<int>adj[],vector<int> &color, bool &is_bipartite)
+    {
+        for(int i=0;i<adj[node].size();i++)
+        {
+            int v = adj[node][i];
+            if(color[v]==-1)
+            {
+                color[v] = 1 - color[node];
+                dfs(v,adj,color,is_bipartite);
+            }
+            else if(color[node] == color[v])
+            {
+                is_bipartite = false;
+                return;
+            }
+        }
+    }
+	bool isBipartite(int V, vector<int>adj[]){
+	    // Code here
+	    vector<int> color;
+	    for(int i=0;i<V;i++)
+	        color.push_back(-1);
+        bool is_bipartite = true;
+        for(int i=0;i<V;i++)
+        {
+            if(color[i]==-1)
+            {
+                color[i] = 0;
+                dfs(i,adj,color,is_bipartite);
+                if(is_bipartite==false)
+                    return false;
+            }
+        }
+        return true;
+	}
+
+};

@@ -1,0 +1,32 @@
+Given two strings str1 and str2. The task is to remove or insert the minimum number of characters from/in str1 so as to transform it into str2. It could be possible that the same character needs to be removed/deleted from one point of str1 and inserted to some another point.
+
+Solution - Using LCS
+we dont need to perform any action on LCS as it is common in both the strings
+
+we need to add charactersfrom string2 that are not in LCS in string1
+we need to remove characters from string1 that are not in LCS (therefore nor in string2 as well)
+class Solution{
+		
+
+	public:
+	int minOperations(string str1, string str2) 
+	{ 
+	    // Your code goes here
+	    vector<vector<int>> dp(str1.length()+1, vector<int>(str2.length()+1, 0));
+	    for(int i=1;i<=str1.length();i++)
+	    {
+	        for(int j=1;j<=str2.length();j++)
+	        {
+	            if(str1[i-1]==str2[j-1])
+	                dp[i][j] = dp[i-1][j-1]+1;
+                else
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+	        }
+	    }
+	    int lcs = dp[str1.length()][str2.length()];
+	    int insertions = str2.length()-lcs;
+	    int deletions = str1.length()-lcs;
+	    return (insertions+deletions);
+	    
+	} 
+};

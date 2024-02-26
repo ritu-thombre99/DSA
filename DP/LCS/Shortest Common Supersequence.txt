@@ -1,0 +1,31 @@
+Given two strings X and Y of lengths m and n respectively, find the length of the smallest string which has both, X and Y as its sub-sequences.
+Note: X and Y can have both uppercase and lowercase letters.
+
+supersequence of two strings(X,Y) is a string which consists both X and Y as substrings sequences (i.e ordered but not continuous)
+
+step 1 - unoptimal supersequence is just sum of length of both X and Y
+step 2 - but we don't need to consider characters common in both of them twice due to concatenation) i.e LCS
+
+X+Y consists of 2*LCS 
+so Shortest common supersequence - len(X+y)-len(LCS)  
+class Solution
+{
+    public:
+    //Function to find length of shortest common supersequence of two strings.
+    int shortestCommonSupersequence(string X, string Y, int m, int n)
+    {
+        //code here
+        vector<vector<int>> dp(m+1, vector<int>(n+1,0));
+        for(int i=1;i<=m;i++)
+        {
+            for(int j=1;j<=n;j++)
+            {
+                if(X[i-1]==Y[j-1])
+                    dp[i][j] = dp[i-1][j-1]+1;
+                else
+                    dp[i][j] = max(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return (m+n-dp[m][n]);
+    }
+};
