@@ -1,0 +1,54 @@
+Given an integer array a[ ] of N elements and an integer K, the task is to check if the array a[ ] could be divided into K non-empty subsets with equal sum of elements.
+
+Complexity is k*2^n
+
+create a decision tree (use it or dont) in a subset
+if array sum is not divisible by k return false
+
+
+if k == 0 we found soln
+if k!=0 but subsetsum = target (arraysum/k) return solution for (k-1)
+now for j=i to len(arr)
+	if arr[j] is not already used and subsetsum+arr[j] < target
+	mark arr[j] = true
+	is function(j+1,k,sum+arr[j]) is true
+		return true
+	else backtract mark arr[j] = false
+
+function(0-i,e start for arr[0], k, subset sum - 0 initially)
+
+
+class Solution{
+  public:
+    bool findSubset(int i,int k,int subsetSum,int target,vector<bool> &used, int a[])
+    {
+        if(k==0)
+            return true;
+        if(subsetSum == target)
+            return findSubset(0,k-1,0,target,used,a);
+        for(int j=i;j<used.size();j++)
+        {
+            if(used[j] || subsetSum+a[j]>target)
+                continue;
+            used[j] = true;
+            if(findSubset(j+1,k,subsetSum+a[j],target,used,a))
+                return true;
+            used[j] = false;
+        }
+    }
+    bool isKPartitionPossible(int a[], int n, int k)
+    {
+         //Your code here
+         int sum = 0;
+         for(int i=0;i<n;i++)
+            sum += a[i];
+         if(sum%k != 0)
+            return false;
+         int target = sum/k;
+         vector<bool> used;
+         for(int i=0;i<n;i++)
+            used.push_back(false);
+        return findSubset(0,k,0,target,used,a);
+         
+    }
+};

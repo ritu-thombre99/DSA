@@ -1,0 +1,79 @@
+Problem can be solved by BFS but it does not create optimal (i.e minimum\chromatic colors) rather an upper bound d (maximum degree of vertx)
+
+initialize all colors to 1
+push 0th node to queue
+
+repeat while q not empty
+	pop top node
+	notice its color
+	if neighbour of this popped node has same color then increment the color of this neighbour 
+	if increment becomes more than M then return FALSE (i.e not m colorable)
+	else push the neighbour to queue if unvisited
+
+
+Time complexity - same as bfs O(v+e)
+space - o(v) for visited
+
+void bfs(int i, vector<int> adj[], vector<bool> &visited, vector<int> &color, int &max_color, bool &is_possible, int m)
+{
+    visited[i] = true;
+    queue<int> q;
+    q.push(i);
+    while(!q.empty())
+    {
+        int node = q.front();
+        q.pop();
+        for(int j=0;j<adj[node].size();j++)
+        {
+            int v = adj[node][j];
+            if(color[node] == color[v])
+                color[v] = color[v] + 1;
+            max_color = max(max_color, max(color[node],color[v]));
+            if(max_color > m)
+            {
+                is_possible = false;
+                return;
+            }
+            if(visited[v]==false)
+            {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+}
+bool graphColoring(bool graph[101][101], int m, int n)
+{
+    // your code here
+    vector<int> adj[n];
+    for(int i = 0; i < n; i++) 
+    {
+        for(int j = i+1; j < n; j++) 
+        {
+            if(graph[i][j]) {
+                adj[i].push_back(j);
+                adj[j].push_back(i);
+            }
+        }
+    }
+    vector<bool> visited;
+    vector<int> color;
+    for(int i=0;i<n;i++)
+    {
+        visited.push_back(false);
+        color.push_back(1);
+    }
+    int max_color = 1;
+    bool is_possible = true;
+    for(int i=0;i<n;i++)
+    {
+        if(visited[i]==false)
+        {
+            bfs(i,adj,visited,color,max_color,is_possible,m);
+            if(is_possible == false)
+                return false;
+        }
+    }
+    return true;
+    
+}

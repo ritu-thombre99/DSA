@@ -1,0 +1,39 @@
+Complexity - O(V!)
+for every vertex V, we are checing all its (V-1 neighbours in worst case)
+
+Idea - backtracking
+
+start with source
+mark it true
+recursively call traverse for all its neighbours
+mark source false so that it can be used in other paths
+
+
+class Solution {
+  public:
+  void traverse(int s,int d,vector<int> adj[],vector<bool> &visited, int &count)
+  {
+      if(s == d)
+      {
+        count = count+1;
+        return;
+      }
+      visited[s] = true;
+      for(int i=0;i<adj[s].size();i++)
+        if(visited[adj[s][i]]==false)
+            traverse(adj[s][i],d,adj,visited,count);
+      visited[s] = false;
+    
+    
+  }
+    // Function to count paths between two vertices in a directed graph.
+    int countPaths(int V, vector<int> adj[], int source, int destination) {
+        // Code here
+        vector<bool> visited;
+        for(int i=0;i<V;i++)
+            visited.push_back(false);
+        int count = 0;
+        traverse(source,destination,adj,visited,count);
+        return count;
+    }
+};

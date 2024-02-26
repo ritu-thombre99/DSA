@@ -1,0 +1,31 @@
+class Solution
+{
+Given a N x M grid. Find All possible paths from top left to bottom right.From each cell you can either move only to right or down.
+
+Complexity - 2^(N*M)
+public:
+    void dfs(int x,int y,int n,int m,vector<vector<int>> grid, vector<int> path, vector<vector<int>> &v)
+    {
+        path.push_back(grid[x][y]);
+        if(x==n-1 && y==m-1)
+        {
+            v.push_back(path);
+            return;
+        }
+        if(x+1<n)
+            dfs(x+1,y,n,m,grid,path,v);
+        if(y+1<m)
+            dfs(x,y+1,n,m,grid,path,v);
+        
+        
+    }
+    vector<vector<int>> findAllPossiblePaths(int n, int m, vector<vector<int>> &grid)
+    {
+        // code here
+        vector<int> path;
+        vector<vector<int>> v;
+        
+        dfs(0,0,n,m,grid,path,v);
+        return v;
+    }
+};

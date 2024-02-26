@@ -1,0 +1,35 @@
+complexity logN
+
+class Solution{
+    public:
+    int pivot(int A[],int l,int h)
+    {
+        if(h<l)
+            return -1;
+        if(h==l)
+            return l;
+        int mid = (l+h)/2;
+        if(mid<h && A[mid]>A[mid+1])
+            return mid;
+        if(mid>l && A[mid-1]>A[mid])
+            return mid-1;
+        if(A[l]>=A[mid]) // element greater than first array
+            return pivot(A,l,mid-1);
+        return pivot(A,mid+1,h);
+    }
+    int search(int A[], int l, int h, int key){
+    //complete the function here
+        int p = pivot(A,l,h);
+        // cout<<p<<" "<<A[p]<<endl;
+        if(key<A[0])
+        {
+            for(int i=p;i<=h;i++)
+                if(A[i]==key)
+                    return i;
+        }
+        for(int i=l;i<=p;i++)
+            if(A[i]==key)
+                return i;
+        return -1;
+    }
+};

@@ -1,0 +1,73 @@
+Given a 2D board of letters and a word. Check if the word exists in the board. The word can be constructed from letters of adjacent cells only. ie - horizontal or vertical neighbors. The same letter cell can not be used more than once.
+
+Solution using Backtracking and dfs
+if not used backtracking then geep will be marked visited and gee
+								k cannot be found out
+so we have to use backtracking
+
+nested for loop runs (M*N) times
+and dfs runs (4^L) we are traversing 4 directions (multiple times due to backtracking) raised to length of word
+
+therefor complexity is M*N*(4^L)
+
+
+// with extra bool space
+class Solution {
+public:
+    vector<int> r{1,-1,0,0};
+    vector<int> c{0,0,1,-1};
+    bool check(int x,int y,string s,string word, vector<vector<bool>> &visited,vector<vector<char>>& board)
+    {
+        if(x<0 || y<0 || x>=board.size() || y>=board[0].size() || visited[x][y]==true || board[x][y]!=word[s.size()])
+            return false;
+        s = s + board[x][y];
+        visited[x][y] = true;
+        if(word.size()==s.size())
+            return true;
+        for(int i=0;i<4;i++)=
+            if(check(x+r[i],y+c[i],s,word,visited,board))
+                return true;
+        visited[x][y] = false;
+        return false;
+    }
+    bool isWordExist(vector<vector<char>>& board, string word) {
+        // Code here
+        vector<vector<bool>> visited(board.size(), vector<bool> (board[0].size(), false));
+        for(int i=0;i<board.size();i++)
+            for(int j=0;j<board[0].size();j++)
+                if(board[i][j] == word[0] && check(i,j,"",word,visited,board))
+                    return true;
+        return false;
+    }
+};
+
+// without extra space
+class Solution {
+public:
+    vector<int> r{1,-1,0,0};
+    vector<int> c{0,0,1,-1};
+    bool check(int x,int y,string s,string word,vector<vector<char>>& board)
+    {
+        if(x<0 || y<0 || x>=board.size() || y>=board[0].size() || board[x][y]!=word[s.size()])
+            return false;
+        s = s + board[x][y];
+        char original_char = board[x][y];
+        board[x][y] = '#';
+        if(word.size()==s.size())
+            return true;
+        for(int i=0;i<4;i++)
+            if(check(x+r[i],y+c[i],s,word,board))
+                return true;
+
+        board[x][y] = original_char;
+        return false;
+    }
+    bool isWordExist(vector<vector<char>>& board, string word) {
+        // Code here
+        for(int i=0;i<board.size();i++)
+            for(int j=0;j<board[0].size();j++)
+                if(board[i][j] == word[0] && check(i,j,"",word,board))
+                    return true;
+        return false;
+    }
+};

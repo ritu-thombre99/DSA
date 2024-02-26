@@ -1,0 +1,42 @@
+Given a number K and string str of digits denoting a positive integer, build the largest number possible by performing swap operations on the digits of str at most K times.
+
+Vaive approach would be to run nested for loop on string and keep swapping (i,j) and check with the max
+but this has unncessary comparisons
+omplexity - N^2^k (N^2) comaprisons and k choices for each comparison
+
+Better approach is to use pointer
+find max character after current index (index = 0 to n-1)
+if current is not max it means we have to swap it so reduce k by 1
+ now for every character in string which is not max swap it with index and check with maximum string
+call recursion on this max string with index+1
+backtrack by uncomputing swapping
+here there are k calls for each character of string there complexity - N^k
+
+class Solution
+{
+    public:
+    //Function to find the largest number after k swaps.
+    void helper(string str, string &maxi, int k, int idx){
+       if(k==0) return;
+       char c = str[idx];
+       for(int i = idx+1; i<str.length(); ++i){
+           if(str[i]>c) c = str[i];
+       }
+       if(c != str[idx]) k--;
+       for(int i =0; i<str.length(); i++){
+           if(str[i]==c){
+               swap(str[idx], str[i]);
+               if(maxi < str) maxi = str;
+               helper(str, maxi, k, idx+1);
+               swap(str[idx], str[i]);
+           }
+       }
+   }
+    string findMaximumNum(string str, int k)
+    {
+       // code here.
+       string maxi = str;
+      helper(str, maxi, k, 0);
+      return maxi;
+    }
+};

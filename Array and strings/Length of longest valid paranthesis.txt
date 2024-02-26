@@ -1,0 +1,49 @@
+Given a string S consisting of opening and closing parenthesis '(' and ')'. Find length of the longest valid parenthesis substring.
+
+A parenthesis string is valid if:
+
+For every opening parenthesis, there is a closing parenthesis.
+Opening parenthesis must be closed in the correct order.
+
+
+For valid paranthesis - number of closed brackets = number of open brackets and length =- open+close
+
+valid paranthesis may start from the beginning or end
+
+from beginning if we encounter more closed para then open then no valid paranthesis till that index so reset
+similarly from end, if open>close then no valid paranthesis so reset open and close
+
+
+Time - O(n)
+Space - (1)
+class Solution{
+public:
+    int maxLength(string S){
+        // code here
+        int open=0,close=0,max=0;
+        for(int i=0;i<S.length();i++)
+        {
+            if(S[i]=='(')
+                open++;
+            else
+                close++;
+            if(open==close && open+close > max)
+                max = open+close;
+            if(close>open)
+                close=open=0;
+        }
+        open=0,close=0;
+        for(int i=S.length()-1;i>=0;i--)
+        {
+            if(S[i]=='(')
+                open++;
+            else
+                close++;
+            if(open==close && open+close > max)
+                max = open+close;
+            if(open>close)
+                close=open=0;
+        }
+        return max;
+    }
+};

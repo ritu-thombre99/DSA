@@ -1,0 +1,38 @@
+
+complexity - N*4^N
+for each character there are at most 4 choices
+length of op string is length of ip string
+there N*4^N
+
+class Solution
+{
+    public:
+    //Function to find list of all words possible by pressing given numbers.
+    void solve(int index, int n, string s, int a[], map<int,string> &mp, vector<string> &ans)
+    {
+        if(s.length()==n)
+        {
+            ans.push_back(s);
+            return;
+        }
+        string mapped_chars = mp[a[index]]; 
+        for(int i=0;i<mapped_chars.length();i++)
+            solve(index+1,n,s+mapped_chars[i],a,mp,ans);
+    }
+    vector<string> possibleWords(int a[], int N)
+    {
+        map<int,string> mp;
+        mp[2] = "abc";
+        mp[3] = "def";
+        mp[4] = "ghi";
+        mp[5] = "jkl";
+        mp[6] = "mno";
+        mp[7] = "pqrs";
+        mp[8] = "tuv";
+        mp[9] = "wxyz";
+        //Your code here
+        vector<string> ans;
+        solve(0,N,"",a,mp,ans);
+        return ans;
+    }
+};

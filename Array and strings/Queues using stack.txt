@@ -1,0 +1,30 @@
+enque - push to stack
+deque - if s2 is empty push all s1 elements to s2
+	else return s2 top
+
+amortized analysis - theta(1)
+
+class Queue {
+    stack<int> input, output;
+public:
+
+    void enqueue(int x) 
+    {
+        input.push(x);
+    }
+
+    int dequeue() 
+    {
+        if(output.empty())
+        {
+            while(!input.empty())
+            {
+                output.push(input.top());
+                input.pop();
+            }
+        }
+        int front = output.top();
+        output.pop();
+        return front;
+    }
+};

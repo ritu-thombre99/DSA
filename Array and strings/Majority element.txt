@@ -1,0 +1,41 @@
+Majority element
+Find the element that occurs more than n/2 times in an array where n is the length of an array
+O(n) and O(1)
+
+Boyce Moore algo-Works when there is a majority element
+Can be modified to make check if majority element not present
+
+
+relies on the fact that if majority element is present then count for it will always be set to 0 at some point
+and it will be reassigned to result
+
+
+(x,y,z) - non majority
+(w,w,w,w) - majority
+
+count for w will be set to 0 3 times but since w occurs more times than xyz its count is less than ws occurence w will always find a way to make itself to 1
+
+int majorityElement(int a[], int size)
+{
+        
+    // your code here
+    int result = 0,count = 0;
+    for(int i=0;i<size;i++)
+    {
+        if(count==0)
+            result = a[i];
+        if(result == a[i])
+            count++;
+        else
+            count--;
+    }
+    count = 0;
+    for(int i=0;i<size;i++)
+        if(a[i]==result)
+            count++;
+    if(count>size/2)
+        return result;
+    return -1;
+    
+        
+}

@@ -1,0 +1,43 @@
+Given a 2D grid of n*m of characters and a word, find all occurrences of given word in grid. A word can be matched in all 8 directions at any point. Word is said be found in a direction if all characters match in this direction (not in zig-zag form). The 8 directions are, horizontally left, horizontally right, vertically up, vertically down and 4 diagonal directions.
+
+Complexity - M*N*8*L
+
+class Solution {
+public:
+    vector<int> r{1,-1,0,0,1,1,-1,-1};
+    vector<int> c{0,0,1,-1,1,-1,1,-1};
+    bool check(int x,int y, string word, vector<vector<char>> &grid)
+    {
+        for(int dir=0;dir<8;dir++)
+        {
+            string s(1,grid[x][y]);
+            int row=x+r[dir],col=y+c[dir];
+            while(row>=0 && col>=0 && row<grid.size() && col<grid[0].size() 
+                    && word[s.size()]==grid[row][col])
+            {
+                s = s + grid[row][col];
+                row = row + r[dir];
+                col = col + c[dir];
+            }
+            if(s==word)
+                return true;
+        }
+        return false;
+    }
+	vector<vector<int>>searchWord(vector<vector<char>>grid, string word){
+	    // Code here
+	    vector<vector<int>> v;
+	    for(int i=0;i<grid.size();i++)
+	    {
+	        for(int j=0;j<grid[0].size();j++)
+	        {
+	            if(grid[i][j]==word[0] && check(i,j,word,grid))
+	            {
+	                vector<int> t{i,j};
+	                v.push_back(t);
+	            }
+	        }
+	    }
+        return v;
+	}
+};

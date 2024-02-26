@@ -1,0 +1,26 @@
+Given an array of strings, return all groups of strings that are anagrams. The groups must be created in order of their appearance in the original array. Look at the sample case for clarification.
+
+Note: The finial output will be in lexicographic order.
+
+Map string->vector<string>
+key is unique (when anagrams are sorted they give same word)
+
+
+Complexity - N*S*log(S) Slog(S) for sorting string N for looping thorugh all strings
+class Solution{
+  public:
+    vector<vector<string> > Anagrams(vector<string>& string_list) {
+        //code here
+        vector<vector<string>> ans;
+        unordered_map<string,vector<string>> m;
+        for(int i=0;i<string_list.size();i++)
+        {
+            string s = string_list[i];
+            sort(s.begin(),s.end());
+            m[s].push_back(string_list[i]);
+        }
+        for(auto itr=m.begin();itr!=m.end();itr++)
+            ans.push_back(itr->second);
+        return ans;
+    }
+};

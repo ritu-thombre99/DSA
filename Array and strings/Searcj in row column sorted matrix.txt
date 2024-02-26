@@ -1,0 +1,26 @@
+Given a matrix mat[][] of size N x M, where every row and column is sorted in increasing order, and a number X is given. The task is to find whether element X is present in the matrix or not.
+
+Complexity - O(M+N)
+start from right most column in the first row
+1. if search element < current element i.e element not present in current column (smaller than smallest element of the column) so j--
+2. if search element > current element i.e element not present in current row (greater than largest element of the row) so i++
+3. current = search so return 1
+
+int matSearch (int N, int M, int matrix[][M], int x)
+{
+    if(N==0 && M==0)
+        return 0;
+    if(x < matrix[0][0] || x>matrix[N-1][M-1])
+        return 0;
+    int i=0,j=M-1;
+    while(i<N && j>=0)
+    {
+        if(matrix[i][j] > x)
+            j--;
+        else if(matrix[i][j] < x)
+            i++;
+        else if(matrix[i][j]==x)
+            return 1;
+    }
+    return 0;
+}

@@ -1,0 +1,30 @@
+You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
+
+Find the maximum profit you can achieve. You may complete at most k transactions.
+
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+
+ 
+
+class Solution {
+public:
+    int find(vector<vector<vector<int>>> &dp, vector<int> &prices, int index, int k, bool buy)
+    {
+        if(index >= prices.size() || k<0)
+            return 0;
+        if(dp[index][buy][k]!=-1)
+            return dp[index][buy][k];
+        if(buy)
+            dp[index][buy][k] = max(-prices[index]+find(dp,prices,index+1,k,!buy),
+                                   find(dp,prices,index+1,k,buy));
+        else
+            dp[index][buy][k] = max(prices[index]+find(dp,prices,index+1,k-1,!buy),
+                                   find(dp,prices,index+1,k,buy));
+        return dp[index][buy][k];
+    }
+    int maxProfit(int k, vector<int>& prices) {
+        vector<vector<vector<int>>> dp(prices.size(),
+                                    vector<vector<int>> (2, vector<int>(k,-1)));
+        return find(dp,prices,0,k-1,1);
+    }
+};

@@ -1,0 +1,46 @@
+As there are N^2 cells from each cell there are 3 unvisited neighbouring cells. So the time complexity O(3^(N^2).
+
+class Solution{
+    public:
+    void dfs(int x,int y, int N, vector<vector<int>> &m, string s, vector<string> &v,vector<vector<bool>> &visited)
+    {
+        
+        if(x==N-1 && y==N-1)
+        {
+            v.push_back(s);
+            return;
+        }
+        visited[x][y] = true;
+        vector<int> r{1,0,0,-1};
+        vector<int> c{0,-1,1,0};
+        vector<char> dir{'D','L','R','U'};
+        for(int i=0;i<4;i++)
+        {
+            int row = x + r[i];
+            int col = y + c[i];
+            if(row<N && col<N && row>=0 && col>=0)
+                if(visited[row][col]==false && m[row][col]==1)
+                    dfs(row,col,N,m,s+dir[i],v,visited);
+        }
+        visited[x][y] = false;
+    }
+    vector<string> findPath(vector<vector<int>> &m, int n) {
+        // Your code goes here
+        vector<string> v;
+        if(m[0][0] == 0 || m[n-1][n-1] == 0)
+            return v;
+        vector<vector<bool>> visited;
+        for(int i=0;i<n;i++)
+        {
+            vector<bool> temp;
+            for(int j=0;j<n;j++)
+                temp.push_back(false);
+            visited.push_back(temp);
+        }
+        dfs(0,0,n,m,"",v,visited);
+        return v;
+    }
+};
+
+can also be done without using visited
+treating original matrix as visited

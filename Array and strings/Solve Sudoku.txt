@@ -1,0 +1,63 @@
+
+Given an incomplete Sudoku configuration in terms of a 9 x 9  2-D square matrix (grid[][]), the task to find a solved Sudoku. For simplicity, you may assume that there will be only one unique solution.
+
+Complexity - 9^(N*N)
+class Solution 
+{
+    public:
+    bool isSafe(int num, int grid[N][N], int row, int col)
+    {
+        for(int j=0;j<9;j++)
+            if(grid[row][j]==num)
+                return false;
+	// row
+        for(int i=0;i<9;i++)
+            if(grid[i][col]==num)
+                return false;
+	// subgrid
+        int a = (row/3)*3, b = (col/3)*3;
+        for(int p = a; p<a+3; p++)
+            for(int q = b; q<b+3; q++)
+                if(grid[p][q] == num)
+                    return false;
+
+        return true;
+    }
+    bool util(int grid[N][N], int row, int col)
+    {
+        if(row==N)
+            return true; // rows completed hence sudoku solved
+        if(col==N)
+            return util(grid,row+1,0); // column completed move to next row
+        if(grid[row][col]!=0)
+            return util(grid,row,col+1); // cell already solved
+        for(int num=1;num<=9;num++)
+        {
+            if(isSafe(num,grid,row,col))
+            {
+                grid[row][col] = num;
+                if(util(grid,row,col+1))
+                    return true;
+                grid[row][col] = 0; // backtrack
+            }
+        }
+        return false;
+    }
+    bool SolveSudoku(int grid[N][N])  
+    { 
+        // Your code here
+        if (util(grid, 0, 0))
+            return true;
+        return false;
+    }
+    
+    //Function to print grids of the Sudoku.
+    void printGrid (int grid[N][N]) 
+    {
+        // Your code here 
+        for(int i=0;i<N;i++)
+            for(int j=0;j<N;j++)
+                cout<<grid[i][j]<<" ";
+    }
+};
+

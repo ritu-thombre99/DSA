@@ -1,0 +1,48 @@
+Given an array arr[] of integers of size N that might contain duplicates, the task is to find all possible unique subsets.
+
+Note: Each subset should be sorted.
+
+Complexity - N*2^N
+
+use unordered set to keep track of string that have been added to answer already
+
+
+class Solution
+{
+    public:
+    //Function to find all possible unique subsets.
+    void solve(vector<int> ip, vector<int> op, unordered_set<string> &s, vector<vector<int>> &ans)
+    {
+        if(ip.size() == 0)
+        {
+            sort(op.begin(), op.end());
+            string subsetstr = "";
+            for(int i : op)
+                subsetstr += (char)i - '0';
+            
+            if(!s.count(subsetstr))
+            {
+                s.insert(subsetstr);
+                ans.push_back(op);
+            }
+            return;
+        }
+        
+        vector<int> op2 = op;
+        op2.push_back(ip[0]);
+        ip.erase(ip.begin()+0);
+        solve(ip, op, s, ans); //new ip old op
+        solve(ip, op2, s, ans); // new ip new op
+    }
+    vector<vector<int> > AllSubsets(vector<int> arr, int n)
+    {
+        // code here 
+        unordered_set<string> s;
+        vector<vector<int>> ans;
+        solve(arr,{}, s, ans );
+        
+        sort(ans.begin(), ans.end());
+        
+        return ans;
+    }
+};

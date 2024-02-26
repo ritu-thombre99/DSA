@@ -1,0 +1,71 @@
+Given an array arr[] of N non-negative integers representing the height of blocks. If width of each block is 1, compute how much water can be trapped between the blocks during the rainy season. 
+
+rain water at cell(i) = min(maximum to left of i, maximum to right of i) - height(i)
+
+//Approach 1 - O(n) space and time
+find max_left and max_right for each index and then calculate total rain water
+
+class Solution{
+
+    // Function to find the trapped water between the blocks.
+    public:
+    long long trappingWater(int arr[], int n){
+        // code here
+        vector<int> left_max, right_max;
+        int max = 0;
+        for(int i=0;i<=n;i++)
+        {
+            left_max.push_back(max);
+            if(arr[i]>max)
+                max = arr[i];
+        }
+        max = 0;
+        for(int i=n-1;i>=0;i--)
+        {
+            right_max.insert(right_max.begin(),max);
+            if(arr[i]>max)
+                max = arr[i];
+        }
+        long long ans = 0;
+        for(int i=0;i<n;i++)
+        {
+            int temp = min(left_max[i],right_max[i]) - arr[i];
+            if(temp>0)
+                ans = ans + temp;
+        }
+        return ans;
+    }
+};
+
+// Method 2 - space optimized
+since we are only using minimum of left and right max we dont have to complextely traverse the array
+
+we can use two pointers (0,n-1) to keep track of left and right max and advance the one which has smaller max
+
+ // } Driver Code Ends
+class Solution{
+
+    public:
+    long long trappingWater(int arr[], int n){
+        // code here
+        int left_max = arr[0], right_max=arr[n-1];
+        int ptr_left = 0, ptr_right = n-1;
+        long long ans = 0;
+        while(ptr_left < ptr_right)
+        {
+            if(left_max < right_max)
+            {
+                ptr_left += 1;
+                left_max = max(left_max, arr[ptr_left]);
+                ans += (left_max-arr[ptr_left]); // no need to check for negative as we are updating max first, so difference would be maxiumum of 0
+            }
+            else
+            {
+                ptr_right -= 1;
+                right_max = max(right_max, arr[ptr_right]);
+                ans += (right_max-arr[ptr_right]);
+            }
+        }
+        return ans;
+    }
+};

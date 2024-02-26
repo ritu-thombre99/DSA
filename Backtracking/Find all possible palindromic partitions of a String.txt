@@ -1,0 +1,48 @@
+Complexity - N*2^N
+for each character of string, we have two choices
+there are n such characters
+and to check if string is palindrome - N
+
+
+class Solution {
+  public:
+    bool palindrome(string s)
+    {
+        if(s.length()==1)
+            return true;
+        int n = s.length();
+        int l=0, r=n-1;
+        while(r>=0 && l<n && l<r)
+        {
+            if(s[l]!=s[r])
+                return false;
+            l++,r--;
+        }
+        return true;
+    }
+    void solve(int i, string s, int n, vector<string> &partition, vector<vector<string>> &ans)
+    {
+        if(i>=n)
+        {
+            ans.push_back(partition);
+            return;
+        }
+        for(int j=i;j<n;j++)
+        {
+            string sub = s.substr(i,j-i+1); // check each substring
+            if(palindrome(sub))
+            {
+                partition.push_back(sub);
+                solve(j+1,s,n,partition,ans);
+                partition.pop_back();
+            }
+        }
+    }
+    vector<vector<string>> allPalindromicPerms(string S) {
+        // code here
+        vector<vector<string>> ans;
+        vector<string> partition;
+        solve(0,S,S.length(),partition,ans);
+        return ans;
+    }
+};

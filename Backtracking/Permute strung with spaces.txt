@@ -1,0 +1,26 @@
+Given a string you need to print all possible strings that can be made by placing spaces (zero or one) in between them. The output should be printed in sorted increasing order of strings
+
+
+Complexity - exponential
+Time Complexity: Since the number of Gaps is n-1, there are total 2^(n-1) patterns each having length ranging from n to 2n-1. Thus overall complexity would be O(n*(2^n)).
+
+recur for substring from i to len(string)
+
+class Solution:
+    def permutation (self, S):
+        # code here
+        strs = [];
+        if(len(S) == 1):
+            strs.append(S)
+            return strs
+         
+        strsTemp=self.permutation(S[1:])
+         
+        # Iterate over strsTemp
+        for i in range(len(strsTemp)):
+            strs.append(S[0] + " " + strsTemp[i])
+            strs.append(S[0] + strsTemp[i])
+        
+        # Return strs
+        strs.sort()
+        return strs

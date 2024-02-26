@@ -1,0 +1,27 @@
+Find the Duplicate Number
+
+O(n) and O(1)
+
+Same as detecting and removing loop from linked list
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int slow=0,fast=0;
+        while(true)
+        {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+            if(slow==fast)
+                break;
+        }
+        int ptr = 0;
+        while(true)
+        {
+            ptr = nums[ptr];
+            fast = nums[fast];
+            if(ptr==fast)
+                return fast;
+        }
+    }
+};

@@ -1,0 +1,30 @@
+Complexity - O(n!)
+
+class Solution
+{
+	public:
+	    void permute(string a, int l, int r, vector<string> &v) 
+        { 
+            // Base case 
+            if (l == r) 
+                v.push_back(a); 
+            else
+            { 
+                for (int i = l; i <= r; i++) 
+                { 
+                    swap(a[l], a[i]); 
+                    permute(a, l+1, r,v); 
+                    swap(a[l], a[i]); 
+                } 
+            } 
+        } 
+
+		vector<string>find_permutation(string S)
+		{
+		    // Code here there
+		    vector<string> v;
+		    permute(S,0,S.size()-1,v);
+		    sort(v.begin(),v.end());
+		    return v;
+		}
+};

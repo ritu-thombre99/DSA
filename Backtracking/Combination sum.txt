@@ -1,0 +1,46 @@
+Given an array of integers and a sum B, find all unique combinations in the array where the sum is equal to B. The same number may be chosen from the array any number of times to make B.
+
+Note:
+        1. All numbers will be positive integers.
+        2. Elements in a combination (a1, a2, …, ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+        3. The combinations themselves must be sorted in ascending order.
+
+
+first sort and remove the duplicates
+
+now for each element in array, push it to temp vector and call function on sum-arr[i]
+if sum==0 then current vector sum == required sum
+increment index and pop back for backtracking
+
+Complexity - for each element there are (n-1) elements to choose from therefor n!
+
+class Solution {
+  public:
+    //Function to return a list of indexes denoting the required 
+    //combinations whose sum is equal to given number.
+    void findCombination(vector<int> &A, int sum, int index, vector<int> &r,vector<vector<int>> &v)
+    {
+        if(sum==0)
+        {
+            v.push_back(r);
+            return;
+        }
+        while(index<A.size() && sum-A[index]>=0)
+        {
+            r.push_back(A[index]);
+            findCombination(A,sum-A[index],index,r,v); // notice we arent incrementing index here because we can choose same element multiple nuber of times
+            index += 1;
+            r.pop_back();
+        }
+    }
+    vector<vector<int> > combinationSum(vector<int> &A, int B) 
+    {
+        // Your code here
+        sort(A.begin(),A.end());
+        A.erase(unique(A.begin(), A.end()), A.end());
+        vector<int> r;
+        vector<vector<int>> v;
+        findCombination(A,B,0,r,v);
+        return v;
+    }
+};

@@ -1,0 +1,30 @@
+class Solution {
+public:
+    void dfs(int s,int d,vector<bool> &visited, vector<vector<int>>edges, int &count)
+    {
+        if(s==d)
+        {
+            count = count + 1;
+            return;
+        }
+        visited[s] = true;
+        for(int i=0;i<edges.size();i++)
+        {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            if(u==s && visited[v]==false)    
+            
+                dfs(v,d,visited,edges,count);
+        }
+        visited[s] = false;
+    }
+	int possible_paths(vector<vector<int>>edges, int n, int s, int d){
+	    // Code here
+	    int count = 0;
+	    vector<bool> visited;
+	    for(int i=0;i<n;i++)
+	        visited.push_back(false);
+        dfs(s,d,visited,edges,count);
+        return count;
+	}
+};

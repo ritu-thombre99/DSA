@@ -1,0 +1,31 @@
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+Find the maximum profit you can achieve. You may complete at most two transactions.
+
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+
+ 
+Same as infinite transaction (Version 2) with limit = 2
+
+class Solution {
+public:
+    int find(vector<vector<vector<int>>> &dp, vector<int>& prices, int index, int c, bool buy)
+    {
+        if(index>=prices.size() || c<0)
+            return 0;
+        if(dp[index][buy][c]!=-1)
+            return dp[index][buy][c];
+        if(buy)
+            dp[index][buy][c] = max(-prices[index]+find(dp,prices,index+1,c,!buy),
+                                find(dp,prices,index+1,c,buy));
+        else
+            dp[index][buy][c] = max(prices[index]+find(dp,prices,index+1,c-1,!buy),
+                                find(dp,prices,index+1,c,buy));
+        return dp[index][buy][c];
+    }
+    int maxProfit(vector<int>& prices) {
+        vector<vector<vector<int>>> dp(prices.size(), 
+                                    vector<vector<int>>(2,vector<int> (2,-1)));
+        return find(dp,prices,0,1,1);
+    }
+};

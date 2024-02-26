@@ -1,0 +1,29 @@
+You are given an array prices where prices[i] is the price of a given stock on the ith day, and an integer fee representing a transaction fee.
+
+Find the maximum profit you can achieve. You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction.
+
+Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+
+ 
+
+class Solution {
+public:
+    int find(vector<vector<int>> &dp,vector<int>& prices, int index, bool buy, int fee)
+    {
+        if(index >= prices.size())
+            return 0;
+        if(dp[index][buy]!=-1)
+            return dp[index][buy];
+        if(buy)
+            dp[index][buy] = max(-prices[index]+find(dp,prices,index+1,!buy,fee),
+                                find(dp,prices,index+1,buy,fee));
+        else
+            dp[index][buy] = max(-fee+prices[index]+find(dp,prices,index+1,!buy,fee),
+                                find(dp,prices,index+1,buy,fee));
+        return dp[index][buy];
+    }
+    int maxProfit(vector<int>& prices, int fee) {
+        vector<vector<int>> dp(prices.size(),vector<int>(2,-1));
+        return find(dp,prices,0,1,fee);
+    }
+};

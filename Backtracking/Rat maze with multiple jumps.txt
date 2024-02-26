@@ -1,0 +1,38 @@
+As there are N^2 cells from each cell there are 2*MAX_JUMP_LEN unvisited neighbouring cells. So the time complexity O(2*MAX_JUMP_LEN^(N^2).
+i.e MAX_JUMP_LEN^(N*N)
+
+class Solution {
+public:
+    bool solve(int x,int y,vector<vector<int>> &matrix, vector<vector<int>> &sol, int n)
+    {
+        if(x==n-1 && y==n-1)
+        {
+            sol[x][y] = 1;
+            return true;
+        }
+        if(x<n && y<n && matrix[x][y]>0)
+        {
+            sol[x][y] = 1;
+            for(int i=1;i<=matrix[x][y] && i<n;i++)
+            {
+                if(solve(x,y+i,matrix,sol,n))
+                    return true;
+                if(solve(x+i,y,matrix,sol,n))
+                    return true;
+            }
+            sol[x][y] = 0;
+            return false;
+        }
+        return false;
+    }
+	vector<vector<int>> ShortestDistance(vector<vector<int>>&matrix){
+	   // Code here
+	   int n = matrix.size();
+	   if(matrix[0][0]==0 && n!=1)
+	        return {{-1}};
+	   vector<vector<int>> sol(n,vector<int>(n,0));
+	   solve(0,0,matrix,sol,n);
+	   return sol;
+	}
+
+};

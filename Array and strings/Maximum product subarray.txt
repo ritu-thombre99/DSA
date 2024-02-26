@@ -1,0 +1,33 @@
+If all numbers are positive, entire array product will be the answer
+
+To handle negative numebrs we need to keep track of maximum and minimum
+if minimum is negative and it is multiplied by negative number it can become maximum
+so we keep updating max and min for every number
+for 0 we reset max min to 1 to indicate starting of new subarray
+
+
+
+class Solution{
+public:
+
+	// Function to find maximum product subarray
+	long long maxProduct(vector<int> arr, int n) {
+	    // code here
+	    long long ans = (long long)(*(max_element(arr.begin(),arr.end())));
+	    long long max_prod=1,min_prod=1;
+	    for(int i=0;i<n;i++)
+	    {
+	        if(arr[i]==0)
+	        {
+	            max_prod=1;
+	            min_prod=1;
+	            continue;
+	        }
+	        long long curr_max = max_prod*arr[i];
+            max_prod = max( max( (long long)arr[i],max_prod*arr[i]), min_prod*arr[i]);
+            min_prod = min( min( (long long)arr[i],curr_max), min_prod*arr[i]);
+            ans = max(ans, max_prod);
+	    }
+	    return ans;
+	}
+};

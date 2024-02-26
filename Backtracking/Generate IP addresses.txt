@@ -1,0 +1,33 @@
+worst case complexity - O(3^4)
+we check how 4 dots can be placed
+there are 3 choices for each dot placement i.e 1./11./111. 
+so complexity is constant
+
+class Solution{
+  public:
+    void solve(int i,int dots, string ip, string &s, vector<string> &ans, int n)
+    {
+        if(dots==4 && i==n)
+        {
+            ans.push_back(ip.substr(0,ip.length()-1)); // remove last dot
+            return;
+        }
+        if(dots>4)
+            return;
+        for(int j=i;j<min(i+3, n);j++)
+        {
+            string sub = s.substr(i,j+1-i);
+            if(stoi(sub)<256 && (i==j||s[i]!='0'))
+                solve(j+1,dots+1,ip+sub+'.',s,ans,n);
+        }
+    }
+    vector<string> genIp(string &s) {
+        // Your code here
+        vector<string> ans;
+        if(s.length()<4 || s.length()>12)
+            return ans;
+        solve(0,0,"",s,ans,s.length());
+        return ans;
+    }
+
+};
