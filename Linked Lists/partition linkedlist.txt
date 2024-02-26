@@ -1,0 +1,132 @@
+// partition for inplace
+could use quick sort's partition but it doesnt preserve order
+struct Node* partition(struct Node* head, int x) {
+    // code here
+    if(!head)
+        return NULL;
+    if(!head->next)
+        return NULL;
+    struct Node *equalHead = NULL;
+    struct Node *equalLast = NULL;
+    
+    struct Node *smallerHead = NULL;
+    struct Node *smallerLast = NULL;
+    
+    struct Node *greaterHead = NULL;
+    struct Node *greaterLast = NULL;
+    
+    struct Node *ptr = head;
+    while(ptr)
+    {
+        if(ptr->data == x)
+        {
+            if(equalHead==NULL)
+            {
+                equalHead = ptr;
+                equalLast = ptr;
+            }
+            else
+            {
+                equalLast->next = ptr;
+                equalLast = equalLast->next;
+            }
+        }
+        else if(ptr->data < x)
+        {
+            if(smallerHead==NULL)
+            {
+                smallerHead = ptr;
+                smallerLast = ptr;
+            }
+            else
+            {
+                smallerLast->next = ptr;
+                smallerLast = smallerLast->next;
+            }
+        }
+        else if(ptr->data > x)
+        {
+            if(greaterHead==NULL)
+            {
+                greaterHead = ptr;
+                greaterLast = ptr;
+            }
+            else
+            {
+                greaterLast->next = ptr;
+                greaterLast = greaterLast->next;
+            }
+        }
+        ptr = ptr->next;
+    }
+    if (greaterLast != NULL)
+        greaterLast->next = NULL;
+    if(smallerHead == NULL)
+    {
+        if(equalHead == NULL)
+            return greaterHead;
+        equalLast->next = greaterHead;
+        return equalHead;
+    }
+    else
+    {
+        if(equalHead!=NULL)
+        {
+            smallerLast->next = equalHead;
+            equalLast->next = greaterHead;
+        }
+        else
+            smallerLast->next = greaterHead;
+        return smallerHead;
+    }
+    // return head;
+}
+
+// partition from quick sort
+
+struct Node* partition(struct Node* head, struct Node* end,
+                       struct Node** newHead,
+                       struct Node** newEnd)
+{
+    struct Node* pivot = end;
+    struct Node *prev = NULL, *cur = head, *tail = pivot;
+ 
+    // During partition, both the head and end of the list
+    // might change which is updated in the newHead and
+    // newEnd variables
+    while (cur != pivot) {
+        if (cur->data < pivot->data) {
+            // First node that has a value less than the
+            // pivot - becomes the new head
+            if ((*newHead) == NULL)
+                (*newHead) = cur;
+ 
+            prev = cur;
+            cur = cur->next;
+        }
+        else // If cur node is greater than pivot
+        {
+            // Move cur node to next of tail, and change
+            // tail
+            if (prev)
+                prev->next = cur->next;
+            struct Node* tmp = cur->next;
+            cur->next = NULL;
+            tail->next = cur;
+            tail = cur;
+            cur = tmp;
+        }
+    }
+ 
+    // If the pivot data is the smallest element in the
+    // current list, pivot becomes the head
+    if ((*newHead) == NULL)
+        (*newHead) = pivot;
+ 
+    // Update newEnd to the current last node
+    (*newEnd) = tail;
+ 
+    // Return the pivot node
+    return pivot;
+}
+

@@ -1,0 +1,46 @@
+class Solution
+{
+    public:
+    Node *reverse(Node *head)
+    {
+        Node *mid = head;
+        Node *prev = NULL;
+        while(head)
+        {
+            head = head->next;
+            mid->next = prev;
+            prev = mid;
+            mid = head;
+        }
+        return prev;
+    }
+    Node *compute(Node *head)
+    {
+        // your code goes here
+        if(!head)
+            return head;
+        if(!head->next)
+            return head;
+        head = reverse(head);
+        Node *prev = head;
+        Node *ptr = head->next;
+        int max = head->data;
+        while(ptr)
+        {
+            if(ptr->data >= max)
+            {
+                max = ptr->data;
+                prev = ptr;
+                ptr = ptr->next;
+            }
+            else
+            {
+                prev->next = ptr->next;
+                ptr = ptr->next;
+            }
+        }
+        head = reverse(head);
+        return head;
+    }
+    
+};

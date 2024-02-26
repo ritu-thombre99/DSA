@@ -1,0 +1,143 @@
+class Solution
+{
+    public:
+
+    Node* insertionSort(struct Node* head_ref)
+    {
+        //code here
+        if(!head_ref)
+            return NULL;
+        if(!head_ref->next)
+            return head_ref;
+        Node *prev = head_ref;
+        Node *curr = head_ref->next;
+        Node *dummy = new Node(0);
+        dummy->next = head_ref;
+        while(curr)
+        {
+            if(curr->data >= prev->data)
+            {
+                prev = curr;
+                curr = curr->next;
+                continue;
+            }
+            Node *temp = dummy;
+            while(temp->next && temp->next->data < curr->data)
+                temp = temp->next;
+            prev->next = curr->next;
+            curr->next = temp->next;
+            temp->next = curr;
+            curr = prev->next;
+        }
+        return dummy->next;
+    }
+    
+};
+
+\\ alternate approach
+
+class Solution
+{
+    public:
+    Node *insert(struct Node *head, int data)
+    {
+        struct Node* node = new Node(data);
+        if(!head)
+            return node;
+        struct Node* ptr = head;
+        struct Node* prev = NULL;
+        while(ptr && ptr->data<data)
+        {
+            prev = ptr;
+            ptr = ptr->next;
+        }
+        if(ptr == head)
+        {
+            node->next = head;
+            head = node;
+        }
+        else if(ptr == NULL)
+        {
+            prev->next = node;
+            prev = prev->next;
+        }
+        else if(ptr!=NULL)
+        {
+            prev->next = node;
+            node->next = ptr;
+        }
+        return head;
+    }
+    Node* insertionSort(struct Node* head_ref)
+    {
+        //code here
+        if(!head_ref)
+            return NULL;
+        if(!head_ref->next)
+            return head_ref;
+        Node *curr = head_ref;
+        Node *sorted = NULL;
+        while(curr)
+        {
+            Node *next = curr->next;
+            curr->next = NULL;
+            sorted = insert(sorted, curr->data);
+            curr = next;
+        }
+        return sorted;
+    }
+    
+};
+
+\\ for dll
+void insert(struct Node** head_ref, int data)
+{
+    struct Node* ptr = *head_ref;
+    struct Node* prev = NULL;
+    while(ptr && ptr->data < data)
+    {
+        prev = ptr;
+        ptr = ptr->next;
+    }
+    struct Node *node = (struct Node*)malloc(sizeof(struct Node));
+    node->data = data;
+    if(ptr == *head_ref)
+    {
+        node->next = *head_ref;
+        (*head_ref)->prev = node;
+        *head_ref = node;
+    }
+    else if(ptr == NULL)
+    {
+        prev->next = node;
+        node->prev = prev;
+        prev = prev->next;
+    }
+    else if(ptr!=NULL && prev!=NULL)
+    {
+        node->prev = prev;
+        prev->next = node;
+        node->next = ptr;
+        ptr->prev = node;
+    }
+    
+    Node* insertionSort(struct Node* head_ref)
+    {
+        //code here
+        if(!head_ref)
+            return NULL;
+        if(!head_ref->next)
+            return head_ref;
+        Node *curr = head_ref;
+        Node *sorted = NULL;
+        while(curr)
+        {
+            Node *next = curr->next;
+            curr->next = NULL;
+            curr->prev = NULL;
+            insert(&sorted, curr->data);
+            curr = next;
+        }
+        return sorted;
+    }
+    

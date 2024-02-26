@@ -1,0 +1,102 @@
+//Function to sort the given doubly linked list using Merge Sort.
+struct Node *merge(struct Node *left, struct Node *right)
+{
+    if(!left && !right)
+        return NULL;
+    if(left && !right)
+        return left;
+    if(!left && right)
+        return right;
+    struct Node *head = NULL;
+    struct Node *tail = NULL;
+    while(left && right)
+    {
+        struct Node *node;    
+        if(left->data < right->data)
+        {
+            node = new Node(left->data);
+            left = left->next;
+        }
+        else
+        {
+            node = new Node(right->data);
+            right = right->next;
+        }
+        if(head==NULL)
+        {
+            head = node;
+            tail = node;
+        }
+        else
+        {
+            tail->next = node;
+            node->prev = tail;
+            tail = tail->next;
+        }
+    }
+    while(left)
+    {
+        struct Node *node = new Node(left->data);
+        left = left->next;
+        if(head==NULL)
+        {
+            head = node;
+            tail = node;
+        }
+        else
+        {
+            tail->next = node;
+            node->prev = tail;
+            tail = tail->next;
+        }
+    }
+    while(right)
+    {
+        struct Node *node = new Node(right->data);
+        right = right->next;
+        if(head==NULL)
+        {
+            head = node;
+            tail = node;
+        }
+        else
+        {
+            tail->next = node;
+            node->prev = tail;
+            tail = tail->next;
+        }
+    }
+    return head;
+}
+struct Node *merge_sort(struct Node *head)
+{
+    if(!head)
+        return NULL;
+    if(!head->next)
+        return head;
+    
+    if(head)
+    {
+        struct Node *slow = head;
+        struct Node *fast = head;
+        while(fast && fast->next)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        struct Node *left = head;
+        struct Node *right = slow;
+        struct Node *leftLast = right->prev;
+        leftLast ->next = NULL;
+        right->prev = NULL;
+        left = merge_sort(left);
+        right = merge_sort(right);
+        return merge(left, right);
+    }
+}
+struct Node *sortDoubly(struct Node *head)
+{
+	// Your code here
+	head = merge_sort(head);
+	return head;
+}

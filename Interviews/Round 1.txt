@@ -1,0 +1,110 @@
+In an Irrigation layout, we have a main reservoir, and a network of subsidiary reservoirs.
+
+Rules:
+1. Every reservoir other than Main has water input from exactly one other reservoir
+2. Any reservoir can have max of 2 outlets to other reservoirs. No loop.
+3. There are some reservoirs that have no outlet (Terminal)
+4. Length between any two connected reservoirs is constant - 1 KM 
+
+ Main reservoir: A
+ A -> B, P
+ B -> D, E
+ P -> Q, R
+ D -> F, G
+  Output: P, F, G
+ 
+ Main reservoir: 0
+ 0 -> 1, 10
+ 1 -> 2, 3
+ 10 -> 11, 12
+ 2 -> 4, 5
+ 
+ All nodes at distance of 2KM from '1'
+ Output: '10', '4', '5' 
+ 
+ 
+ 1. Identify DS
+ 2. Problem Approach
+ 3. Code (working)
+ 
+ vector<int> adj[N];
+ cin>>
+ 
+ 
+ void findDist(int source, unordered_map<int> adj[], int k, int curr_dist, vector<int> &ans, vector<bool> &visited)
+ {
+    visited[source] = true;
+    for(int i=0;i<adj[source].size();i++)
+    {
+        int u = source, v=adj[source][i];
+        if(!visited[v])
+        {
+            if(curr_dist+1 == k)
+                ans.push_back(v);
+            findDist(v,adj,k,curr_dist+1,ans,visited);
+        }
+    }
+ }
+ 
+  void findDist(int source, unordered_map<int, vector<int>> &adj, int k, int curr_dist, vector<int> &ans, unordered_map<int,bool> &visited)
+ {
+    visited[source] = true;
+    for(int i=0;i<adj[source].size();i++)
+    {
+        int u = source, v=adj[source][i];
+        if(!visited[v])
+        {
+            if(curr_dist+1 == k)
+                ans.push_back(v);
+            findDist(v,adj,k,curr_dist+1,ans,visited);
+        }
+    }
+ }
+ 
+O(n logn)
+O(1)
+ =====================================
+ 
+ Given Doubly Linked List
+ A <-> B <-> C
+ 
+ ptr1=A, ptr2=B, new_ptr=A (initially)
+ enter loop
+ 1. new_A->next=new_B  (i.e temp)
+    new_B->prev=new_A
+    new_ptr = new_B (i.e temp)
+    ptr1=B, ptr2=C
+2. new_B->next = new_C (i.e temp)
+    new_C->prev = new_B
+    new_ptr = new_C (i.e temp)
+    ptr1=C, ptr2=NULL (end loop)
+    
+    return new_head
+ 
+ Copy of the DLL
+ 
+ 
+ Node* copy(Node *head)
+ {
+    if(!head) return NULL;
+    Node *new_head = new Node(head->data);
+    if(!head->next) return new_head;
+    Node *new_ptr = new_head;
+    Node *ptr1 = head;
+    Node *ptr2 = head->next;
+    while(ptr2)
+    {
+        Node *temp = new Node(ptr2->data);
+        temp->prev = new_ptr;
+        new_ptr->next = temp;
+        new_ptr = temp;
+        ptr1 = ptr1->next;
+        ptr2 = ptr2->next;
+    }
+    return new_head;
+ }
+ 
+  A <-> B <-> C
+  
+  
+  

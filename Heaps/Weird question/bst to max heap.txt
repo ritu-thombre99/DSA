@@ -1,0 +1,33 @@
+inorder of bst = post order of maxheap
+therefore store inorder traversal in queue
+and assign it to post prder later
+
+class Solution{
+  public:
+    void inorder(Node *root, priority_queue<int,vector<int>,greater<int>> &v)
+    {
+        if(!root)
+            return;
+        inorder(root->left, v);
+        v.push(root->data);
+        inorder(root->right, v);
+    }
+    void postorder(Node *root, priority_queue<int,vector<int>,greater<int>> &v)
+    {
+        if(!root)
+            return;
+        postorder(root->left,v);
+        postorder(root->right,v);
+        root->data = v.top();
+        v.pop();
+    }
+    void convertToMaxHeapUtil(Node* root)
+    {
+        // Your code goes here
+        if(!root)
+            return;
+        priority_queue<int,vector<int>,greater<int>> v;
+        inorder(root,v);
+        postorder(root,v);
+    }    
+};

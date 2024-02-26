@@ -1,0 +1,37 @@
+class Solution
+{
+    public:
+    Node *zigZag(Node* head)
+    {
+     // your code goes here
+        if(!head)
+            return NULL;
+        if(!head->next)
+            return head;
+        Node * temp1 = head ;
+        Node * temp2 = head->next ;
+        int swap ; 
+        int itr = 1 ;
+        
+        while(temp2 != NULL){
+            if(itr%2 != 0){
+                if(temp2->data < temp1->data){    
+                    swap = temp1->data ;
+                    temp1->data = temp2->data ;
+                    temp2->data = swap ;
+                }
+            }
+            else if(itr%2 == 0){
+                if(temp2->data > temp1->data){    
+                    swap = temp1->data ;
+                    temp1->data = temp2->data ;
+                    temp2->data = swap ;
+                }
+            }
+            temp2 = temp2->next ;
+            temp1 = temp1->next ;
+            itr++ ;
+        }
+        return head ;
+    }
+};

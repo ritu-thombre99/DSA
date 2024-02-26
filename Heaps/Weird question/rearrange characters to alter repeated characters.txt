@@ -1,0 +1,111 @@
+Method 1 - max_heap priority_queue to store characters with their freq
+highest freq at the top
+
+append highest freq char to result string and remove it temporarily to variable prev by reducing freq by 1
+
+if prev freq is greater than 0 then push it to the heap
+
+if result string and input string have same length then we succeeded in altering the string
+
+Complexity - nlogn
+
+class Solution
+{
+    #define MAX_CHAR 26
+    public:
+    struct Comparator{
+        bool operator()(pair<int,int> a,pair<int,int> b)
+        {
+            return a.second<b.second;
+        }
+    };
+    string rearrangeString(string str)
+    {
+        //code here
+        int char_count[MAX_CHAR] = {0};
+        for(int i=0;i<str.size();i++)
+            char_count[str[i]-'a']++;
+        priority_queue<pair<char,int>,vector<pair<char,int>>,Comparator> pq;
+        for(int i=0;i<MAX_CHAR;i++)
+            if(char_count[i]!=0)
+                pq.push({(char)(i+97),char_count[i]});
+        string res = "";
+        pair<char,int> prev = {'#',-1};
+        while(!pq.empty())
+        {
+            pair<char,int> top = pq.top();
+            pq.pop();
+            res = res + top.first;
+            top.second = top.second - 1;
+            if(prev.second > 0)
+                pq.push(prev);
+            prev = top;
+        }
+        if(res.size() != str.size())
+            return "-1";
+        return res;
+    }
+    
+};
+
+
+Method 2 - Better approach
+O(n) solution
+
+if highest frequency character appears more than half of the length of input string then rearrange,ent not possible
+
+assign highest freq character to even indices of result setring untill
+
+similarly assign rest of the character at alternate positions
+
+
+class Solution
+{
+    #define MAX_CHAR 26
+    public:
+    struct Comparator{
+        bool operator()(pair<int,int> a,pair<int,int> b)
+        {
+            return a.second<b.second;
+        }
+    };
+    string rearrangeString(string str)
+    {
+        //code here
+        int char_count[MAX_CHAR] = {0};
+        int count_max = 0;
+        int max_index;
+        for(int i=0;i<str.size();i++)
+        {
+            char_count[str[i]-'a']++;
+            if(char_count[str[i]-'a'] > count_max)
+            {
+                max_index = str[i]-'a';
+                count_max = char_count[max_index];
+            }
+        }
+        if(count_max > (str.size()+1)/2 )
+            return "-1";
+        string res(str.size(),'#');
+        int index = 0;
+        while(char_count[max_index])
+        {
+            res[index] = (char)(max_index+97);
+            index = index + 2;
+            char_count[max_index]--;
+        }
+        for(int i=0;i<26;i++)
+        {
+            while(char_count[i]>0)
+            {
+                if(index>=res.size())
+                    index = 1;
+                res[index] = (char)(i+97);
+                index = index + 2;
+                char_count[i]--;
+            }
+        }
+        return res;
+    }
+    
+};

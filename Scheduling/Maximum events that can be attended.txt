@@ -1,0 +1,49 @@
+There are N events in Geek's city. You are given two arrays start[] and end[] denoting starting and ending day of the events respectively. Event i starts at start[i] and ends at end[i].
+You can attend an event i at any day d between start[i] and end[i] (start[i] ≤ d ≤ end[i]). But you can attend only one event in a day.
+Find the maximum number of events you can attend.
+
+
+Sort the events
+start from the first of the first event in sorted array (i=0)
+initialize the priority queue, count=0
+
+1. if pq is empty then set curr_day = i
+2. while there are events that start with the day = curr_day, push their end day into pq
+3. increment counter (attended one event on curr_day)
+4. increment curr_day (as event on curr_day already attended, so choose next day)
+5. while there are end days which finish before or on curr_day (which is now incremented) pop them
+
+Repeat above procedure untill all days are over or pq becomes empty
+
+Complexity - NlogN
+sorting
+and pq implementation
+
+class Solution {
+  public:
+    int maxEvents(int start[], int end[], int N) {
+        // code here
+        vector<pair<int,int>> v;
+        for(int i=0;i<N;i++)
+            v.push_back({start[i],end[i]});
+        sort(v.begin(),v.end());
+        priority_queue<int,vector<int>,greater<int>> pq;
+        int i=0, day=0, count=0;
+        while(i<N || !pq.empty())
+        {
+            if(pq.empty())
+                day = v[i].first;
+            while(i<N && v[i].first==day)
+            {
+                pq.push(v[i].second);
+                i++;
+            }
+            day++;
+            count++;
+            pq.pop();
+            while(!pq.empty() && pq.top()<day)
+                pq.pop();
+        }
+        return count;
+    }
+};

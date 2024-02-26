@@ -1,0 +1,118 @@
+class Solution {
+	public:
+		string FirstNonRepeating(string A){
+		    // Code here
+		    vector<char> recent;
+		    unordered_map<char,int> mp;
+		    string answer = "";
+		    for(int i=0;i<A.size();i++)
+		    {
+		        if(mp.find(A[i]) == mp.end())
+		        {
+		            recent.push_back(A[i]);
+		            answer = answer + recent[0];
+		            mp[A[i]] = 1;
+		        }
+		        else
+		        {
+		            recent.erase(remove(recent.begin(), recent.end(), A[i]), recent.end());
+		            if(recent.empty())
+		                answer = answer + "#";
+	                else
+	                    answer = answer + recent[0];
+	                mp[A[i]] = mp[A[i]] + 1;
+		        }
+		    }
+		    return answer;
+		}
+
+};
+
+
+\\ alternate solution
+
+#include<bits/stdc++.h>
+using namespace std;
+
+ // } Driver Code Ends
+class Solution {
+	public:
+        #define MAX_CHAR 256
+    
+        struct node {
+            char a;
+            struct node *next, *prev;
+        };
+        
+        void appendNode(struct node** head_ref,struct node** tail_ref, char x)
+        {
+            struct node* temp = new node;
+            temp->a = x;
+            temp->prev = temp->next = NULL;
+        
+            if (*head_ref == NULL) {
+                *head_ref = *tail_ref = temp;
+                return;
+            }
+            (*tail_ref)->next = temp;
+            temp->prev = *tail_ref;
+            *tail_ref = temp;
+        }
+        void removeNode(struct node** head_ref,struct node** tail_ref, struct node* temp)
+        {
+            if (*head_ref == NULL)
+                return;
+            if (*head_ref == temp)
+                *head_ref = (*head_ref)->next;
+            if (*tail_ref == temp)
+                *tail_ref = (*tail_ref)->prev;
+            if (temp->next != NULL)
+                temp->next->prev = temp->prev;
+            if (temp->prev != NULL)
+                temp->prev->next = temp->next;
+        
+            delete (temp);
+        }
+        
+        string FirstNonRepeating(string A)
+        {
+            // Code here
+            struct node* inDLL[MAX_CHAR];
+            bool repeated[MAX_CHAR];
+
+            struct node *head = NULL, *tail = NULL;
+            for (int i = 0; i < MAX_CHAR; i++) 
+            {
+                inDLL[i] = NULL;
+                repeated[i] = false;
+            }
+            vector<char> v;
+            for (int i = 0; i<A.size(); i++) 
+            {
+                char x = A[i];
+                
+                if (!repeated[x]) 
+                {
+                    if (inDLL[x] == NULL) 
+                    {
+                        appendNode(&head, &tail, A[i]);
+                        inDLL[x] = tail;
+                    }
+                    else 
+                    {
+                        removeNode(&head, &tail, inDLL[x]);
+                        inDLL[x] = NULL;
+                        repeated[x]= true; 
+                    }
+                }
+                if (head != NULL)
+                    v.push_back(head->a);
+                else
+                    v.push_back('#');
+            }
+            string answer(v.begin(), v.end());
+            return answer;
+        }
+
+};
+

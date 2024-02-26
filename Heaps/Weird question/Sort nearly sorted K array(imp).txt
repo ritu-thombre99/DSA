@@ -1,0 +1,36 @@
+heapify takes klogk (or k) time to build
+thenwe have to push/pop (n-k) elements from heap of size k -> (n-k)log(k)
+
+Complexity = o(k)+O(n-k log(k))
+
+Since array is k elements away from being sorted, min heap of size k will keep track sorted subarray of size k and assign them to array indices
+
+
+class Solution
+{
+    public:
+    //Function to return the sorted array.
+    vector <int> nearlySorted(int arr[], int num, int K){
+        // Your code here
+        int size;
+        if(K==num)
+            size = K;
+        else
+            size=K+1;
+        priority_queue<int,vector<int>,greater<int>> pq{arr,arr+size}; //min heap
+        int index = 0;
+        for(int i=K+1;i<num;i++)
+        {
+            arr[index++] = pq.top();
+            pq.pop();
+            pq.push(arr[i]);
+        }
+        while(!pq.empty())
+        {
+            arr[index++] = pq.top();
+            pq.pop();
+        }
+        vector<int> v{arr,arr+num};
+        return v;
+    }
+};

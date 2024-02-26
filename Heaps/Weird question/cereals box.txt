@@ -1,0 +1,32 @@
+You are given N numbers you can decrease each number by 10 % or K kg whichever is more. If the number you choose is less than K you can make it zero. Your task is to minimize the sum of the number as small as possible by performing N operations only
+
+Note: Final answer should be typecasted to the nearest integer smaller or equal to the value.
+
+not sure how to do in logK time
+
+class Solution{
+public:
+	long long minSum(vector<int> a,int N,int K){
+	    // code here
+	    priority_queue<float> pq;
+	    for(int i=0;i<N;i++)
+	        pq.push(a[i]);
+        while(N--)
+        {
+            float top = pq.top();
+            pq.pop();
+            float percent_reduce = (0.9)*top;
+            float kg_reduce = top-K;
+            if(kg_reduce < 0)
+                kg_reduce = 0;
+            pq.push(min(percent_reduce,kg_reduce));
+        }
+        float sum=0.0;
+        while(!pq.empty())
+        {
+            sum = sum + pq.top();
+            pq.pop();
+        }
+        return (sum);
+	}
+};

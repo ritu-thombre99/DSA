@@ -1,0 +1,35 @@
+In Doraland, people have unique Identity Numbers called D-id. Doraemon owns the most popular gadget shop in Doraland. Since his gadgets are in high demand and he has only K gadgets left he has decided to sell his gadgets to his most frequent customers only. N customers visit his shop and D-id of each customer is given in an array array[ ]. In case two or more people have visited his shop the same number of time he gives priority to the customer with higher D-id. Find the D-ids of people he sells his K gadgets to.
+
+class Solution{
+    public:
+    struct Comparator{
+        bool operator()(pair<int,int> a, pair<int,int> b) 
+        {
+            if(a.second < b.second)
+                return true;
+            else if(a.second > b.second)
+                return false;
+            else if(a.second == a.second)
+                return a.first < b.first;
+        }
+    };
+    vector<int> TopK(vector<int>& array, int k)
+    {
+        // code here
+        unordered_map<int,int> mp;
+        for(int i=0;i<array.size();i++)
+            mp[array[i]]++;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,Comparator> pq;
+        for(auto itr = mp.begin();itr!=mp.end();itr++)
+            pq.push({itr->first, itr->second});
+            vector<int> v;
+        while(!pq.empty() && k--)
+        {
+            v.push_back(pq.top().first);
+            pq.pop();
+        }
+        
+        return v;
+        
+    }
+};

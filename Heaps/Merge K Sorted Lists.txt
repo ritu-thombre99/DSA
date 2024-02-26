@@ -1,0 +1,92 @@
+merge K sorted linked lists
+
+Method 1: 
+step 1 - Make first list arr[0] as result
+step 2 - For lists from arr[1],arr[2],....,arr[k], merge them with arr[i] using merge from mergeSort
+Complexity - 1n - arr[k] traversed 1 time
+	     2n - arr[k-1] traversed 2 times
+	     3n - arr[k-2] traversed 3 times
+	     ....
+             kn - arr[0] traversed k times
+therefore O(n*k*k))
+
+Method 2 - Divide and conquer
+The idea is to pair up K lists (first and last) and merge each pair in linear time using O(n) space.
+After the first cycle, K/2 lists are left each of size 2*N. After the second cycle, K/4 lists are left each of size 4*N and so on.
+Repeat the procedure until we have only one list left.
+
+Node* SortedMerge(Node* a, Node* b)
+{
+    Node* result = NULL;
+    if (a == NULL)
+        return (b);
+    else if (b == NULL)
+        return (a);
+    if (a->data <= b->data) {
+        result = a;
+        result->next = SortedMerge(a->next, b);
+    }
+    else {
+        result = b;
+        result->next = SortedMerge(a, b->next);
+    }
+    return result;
+}
+Node* mergeKLists(Node* arr[], int last)
+{
+    while (last != 0) {
+        int i = 0, j = last;
+        while (i < j) {
+            arr[i] = SortedMerge(arr[i], arr[j]);
+            i++, j--;
+            if (i >= j)
+                last = j;
+        }
+    }
+    return arr[0];
+}
+Complexity Analysis: 
+
+     Assuming N(n*k) is the total number of nodes, n is the size of each linked list, and k is the total number of linked lists.
+
+Time Complexity: O(N*log k) or O(n*k*log k)
+As outer while loop in function mergeKLists() runs log k times and every time it processes n*k elements.
+Auxiliary Space: O(N) or O(n*k)
+Because recursion is used in SortedMerge() and to merge the final 2 linked lists of size N/2, N recursive calls will be made.
+
+
+Method 3 - Using heap
+
+Add first element from every list to priority queue
+Pop top element of queue
+add next iten of popped element to queue
+
+struct compare
+{
+    bool operator()(struct Node* a, struct Node* b)
+        return a->data > b->data;
+};
+struct Node* mergeKSortedLists(
+             struct Node* arr[], int k)
+{
+    priority_queue<Node*, vector<Node*>, compare> pq;
+    for (int i = 0; i < k; i++)
+        if (arr[i] != NULL)
+            pq.push(arr[i]);
+    if (pq.empty())
+        return NULL;
+   
+    struct Node *dummy = newNode(0);
+    struct Node *last = dummy;
+    while (!pq.empty()) 
+    {
+        struct Node* curr = pq.top();
+        pq.pop();
+        last->next = curr;
+        last = last->next; 
+        if (curr->next != NULL)
+        	pq.push(curr->next);
+    }
+ 
+    return dummy->next;
+}

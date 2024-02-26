@@ -1,0 +1,81 @@
+Complexity - nlogn
+
+use max heap to store element from smallest to middle (middle at top)
+use min heap to store element from middle to highest (middle at top)
+
+then compare incoming element with current median to see if it should be on left or right side
+
+if new element is less than median then
+	a. max heap size is less than min heap- push new element to max heap
+else
+	b. push top of max heap to min heap (automatically pushed to top of min heap) and add new element to max heap
+
+similarly follow the process of new element is greater than median
+
+
+class Solution
+{
+    public:
+    priority_queue<int> low_to_mid;
+    priority_queue<int,vector<int>,greater<int>> high_to_mid;
+    double median;
+    //Function to insert heap.
+    void insertHeap(int &x)
+    {
+        if(high_to_mid.empty() && low_to_mid.empty())
+        {
+            low_to_mid.push(x);
+            median = x;
+        }
+        else if(high_to_mid.size() < low_to_mid.size())
+        {
+            if(x>median)
+                high_to_mid.push(x);
+            else
+            {
+                high_to_mid.push(low_to_mid.top());
+                low_to_mid.pop();
+                low_to_mid.push(x);
+            }
+            median = (high_to_mid.top()+low_to_mid.top())/2;
+        }
+        else if(high_to_mid.size() > low_to_mid.size())
+        {
+            if(x<median)
+                low_to_mid.push(x);
+            else
+            {
+                low_to_mid.push(high_to_mid.top());
+                high_to_mid.pop();
+                high_to_mid.push(x);
+            }
+            median = (high_to_mid.top()+low_to_mid.top())/2;
+        }
+        else if(high_to_mid.size() == low_to_mid.size())
+        {
+            if(x<median)
+            {
+                low_to_mid.push(x);
+                median = (double)low_to_mid.top();
+            }
+            else
+            {
+                high_to_mid.push(x);
+                median = (double)high_to_mid.top();
+            }
+        }
+        
+    }
+    
+    //Function to balance heaps.
+    void balanceHeaps()
+    {
+        return;
+    }
+    
+    //Function to return Median.
+    double getMedian()
+    {
+        return median;
+    }
+};

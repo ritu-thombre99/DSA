@@ -1,0 +1,74 @@
+// not optimized
+
+class Solution
+{
+  public:
+    //Function to convert binary tree into circular doubly linked list.
+    void util(Node *root, Node **dll, Node **tail)
+    {
+        if(root)
+        {
+            util(root->left,dll,tail);
+            Node *node = newNode(root->data);
+            if(*dll==NULL)
+            {
+                
+                *dll = node;
+                *tail = node;
+            }
+            else
+            {
+                node->left = (*tail);
+                (*tail)->right = node;
+                (*tail) = (*tail)->right;
+            }
+            util(root->right,dll,tail);
+        }
+    }
+    Node *bTreeToCList(Node *root)
+    {
+    //add code here
+        Node *dll = NULL;
+        Node *tail = NULL;
+        util(root,&dll,&tail);
+        if(tail)
+            tail->right = dll;
+        if(dll)
+            dll->left = tail;
+        return dll;
+        
+    }
+};
+
+// optimized space solution
+
+Node *concatenate(Node *leftList, Node *rightList)
+{
+    if (leftList == NULL)
+        return rightList;
+    if (rightList == NULL)
+        return leftList;
+
+    Node *leftLast = leftList->left;
+    Node *rightLast = rightList->left;
+
+    leftLast->right = rightList;
+    rightLast->right = leftList;
+
+    rightList->left = leftLast;
+    leftList->left = rightLast;
+   
+    return leftList;
+}
+
+Node *bTreeToCList(Node *root)
+{
+    if (root == NULL)
+        return NULL;
+    Node *left = bTreeToCList(root->left);
+    Node *right = bTreeToCList(root->right);
+    root->left = root->right = root;
+ 
+    return concatenate(concatenate(left, root), right);
+}
+  

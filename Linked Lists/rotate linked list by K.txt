@@ -1,0 +1,26 @@
+class Solution
+{
+    public:
+    //Function to rotate a linked list.
+    Node* rotate(Node* head, int k)
+    {
+        // Your code here
+        Node *prev = NULL;
+        Node *curr = head;
+        while(k!=0)
+        {
+            k=k-1;
+            prev = curr;
+            curr = curr->next;
+        }
+        if(curr==NULL)
+            return head;
+        Node *new_head = curr;
+        prev->next = NULL;
+        while(curr && curr->next)
+            curr=curr->next;
+        curr->next = head;
+        // cout<<prev->data<<"->"<<curr->data<<endl;
+        return new_head;
+    }
+};

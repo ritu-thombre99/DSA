@@ -1,0 +1,55 @@
+comlexity - mlogm+nlon
+class Solution{
+    public:
+    vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+        // your code here
+        priority_queue<int> q;
+        for(int i=0;i<a.size();i++)
+            q.push(a[i]);
+        for(int i=0;i<b.size();i++)
+            q.push(b[i]);
+        vector<int> v;
+        while(!q.empty())
+        {
+            v.push_back(q.top());
+            q.pop();
+        }
+        return v;
+    }
+};
+
+method 2
+complexity - m+n log(m+n)
+
+class Solution{
+    public:
+    void heapify(int i, vector<int> &v)
+    {
+        int largest = i;
+        int left = 2*i+1;
+        int right = 2*i+2;
+        if(left<v.size() && v[largest]<v[left])
+            largest = left;
+        if(right<v.size() && v[largest]<v[right])
+            largest = right;
+        if(largest!=i)
+        {
+            int temp = v[largest];
+            v[largest] = v[i];
+            v[i] = temp;
+            heapify(largest,v);
+        }
+    }
+    vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+        // your code here
+        vector<int> v;
+        for(int i=0;i<a.size();i++)
+            v.push_back(a[i]);
+        for(int i=0;i<b.size();i++)
+            v.push_back(b[i]);
+        int N=v.size();
+        for(int i=(N/2)-1;i>=0;i--)
+            heapify(i,v);
+        return v;
+    }
+};

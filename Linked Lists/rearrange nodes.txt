@@ -1,0 +1,40 @@
+class Solution
+{
+    public:
+    void rearrangeEvenOdd(Node *head)
+    {
+       // Your Code here
+       if(!head)
+            return;
+        if(!head->next)
+            return;
+        if(!head->next->next)
+            return;
+        Node *prev = NULL;
+        Node *odd = head;
+        Node *even = head->next;
+        Node *even_head = head->next;
+        while(even && odd)
+        {
+            if(odd->next)
+                odd->next = odd->next->next;
+            if(even->next)
+                even->next = even->next->next;
+            if(odd)
+            {
+                prev = odd;
+                odd = odd->next;
+            }
+            if(even)
+                even = even->next;
+        }
+	// in case there are odd number of node i.e num_odd_nodes > num_even_nodes
+        if(odd)
+        {
+            prev->next = odd;
+            prev = odd;
+            odd = odd->next;
+        }
+        prev->next = even_head;
+    }
+};

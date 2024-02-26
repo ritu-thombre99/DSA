@@ -1,0 +1,36 @@
+class Solution
+{
+    public:
+    struct node *reverse (struct node *head, int k)
+    { 
+        // Complete this method
+        struct node *prev = NULL;
+        struct node *middle = head;
+        while(head)
+        {
+            head=head->next;
+            middle->next = prev;
+            prev = middle;
+            middle = head;
+        }
+        return prev;
+    }
+};
+
+for dll
+
+struct Node* reverseDLL(struct Node * head)
+{
+    struct Node *new_head = NULL;
+    struct Node *mid = head;
+    while(head)
+    {
+        head = head->next;
+        mid->next = new_head;
+        if(new_head)
+            new_head->prev = mid;
+        new_head = mid;
+        mid = head;
+    }
+    return new_head;
+}

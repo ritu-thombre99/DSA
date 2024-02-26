@@ -1,0 +1,102 @@
+keepm inserting nodes in a set
+if loop present there comes a point where a node will already be present in set
+break from that point and remove the loop
+
+# include <bits/stdc++.h>
+class Solution
+{
+    public:
+    //Function to remove a loop in the linked list.
+    
+    void removeLoop(Node* head)
+    {
+        // code here
+        // just remove the loop without losing any nodes
+        unordered_set<Node*> mp;
+        Node *ptr = head;
+        Node *loop_start = NULL;
+        while(ptr)
+        {   
+            if(mp.find(ptr) == mp.end())
+            {
+                mp.insert(ptr);
+                ptr = ptr->next;
+            }
+            else
+            {
+                loop_start = ptr;
+                break;
+            }
+        }
+        if(loop_start != NULL)
+        {
+            ptr = loop_start->next;
+            while(ptr->next != loop_start)
+                ptr = ptr->next;
+            ptr->next = NULL;
+        }
+
+    }
+};
+
+
+\\ Method 2 - Efficient 
+No extra space
+
+let a be the distance between head and the node from where loop starts
+let b be the distance where slow and fast meet
+let c be the distance from start of loop to b
+
+
+to meet at point b 
+slow distance covered = a+b
+fast distance covered = a+b+c+b=a+2b+c
+
+but fast distance = 2*slow distance
+2a+2b = a+2b+c
+therefore a=c
+i.e start of the loop is equidistant from head and point where slow and fast meet
+
+
+# include <bits/stdc++.h>
+class Solution
+{
+    public:
+    //Function to remove a loop in the linked list.
+    
+    void removeLoop(Node* head)
+    {
+        // code here
+        // just remove the loop without losing any nodes
+        unordered_set<Node*> mp;
+        Node *slow = head,*fast = headl
+        while(fast && fast->next)
+        {   
+            slow = slow->next;
+	    fast = fast->next->next;
+	    if(slow==fast)
+		break;
+        }
+        if(slow==fast)
+        {
+            slow = head;
+	    if(slow==fast)
+	    {
+		while(fast->next != slow)
+			fast = fast->next;
+		fast->next = NULL;
+	    }
+	    else
+	    {
+		while(fast->next != slow->next)
+		{
+			fast = fast->next;
+			slow = slow->next;
+		}
+		fast->next = NULL;
+	    }
+        }
+
+    }
+};
+

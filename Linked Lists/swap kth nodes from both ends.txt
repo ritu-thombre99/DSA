@@ -1,0 +1,65 @@
+//Function to swap Kth node from beginning and end in a linked list.
+int count_nodes(Node *head)
+{
+    Node *ptr = head;
+    int count = 0;
+    while(ptr)
+    {
+        count = count + 1;
+        ptr = ptr->next;
+    }
+    return count;
+}
+Node *swapkthnode(Node* head, int num, int K)
+{
+    // Your Code here
+    if(!head)
+        return head;
+    if(!head->next)
+        return head;
+    int node_num = count_nodes(head);
+    if(K>node_num)
+        return head;
+    int left = K;
+    int right = node_num-K+1;
+    if(left>right)
+    {
+        int temp = left;
+        left = right;
+        right = temp;
+    }
+    Node *curr1 = head;
+    Node *prev1 = NULL;
+    while(left!=1)
+    {
+        left=left-1;
+        prev1 = curr1;
+        curr1 = curr1->next;
+    }
+    
+    Node *curr2 = head;
+    Node *prev2 = NULL;
+    while(right!=1)
+    {
+        right=right-1;
+        prev2 = curr2;
+        curr2 = curr2->next;
+    }
+    if(prev1!=NULL)
+    {
+        prev1->next = curr2;
+        prev2->next = curr1;
+        
+        Node* temp = curr2->next;
+        curr2->next = curr1->next;
+        curr1->next = temp;
+    }
+    else
+    {
+        head = curr2;
+        curr2->next = curr1->next;
+        prev2->next = curr1;
+        curr1->next = NULL;
+    }
+    return head;
+}

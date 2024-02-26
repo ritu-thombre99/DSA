@@ -1,0 +1,59 @@
+Given a set of N jobs where each jobi has a deadline and profit associated with it.
+
+Each job takes 1 unit of time to complete and only one job can be scheduled at a time. We earn the profit associated with job if and only if the job is completed by its deadline.
+
+Find the number of jobs done and the maximum profit.
+
+Note: Jobs will be given in the form (Jobid, Deadline, Profit) associated with that Job.
+
+Complexity - O(N*logN) due to sorting
+
+Prioritize - 1. Jobs with higher profit
+	     2. If equal profit then longer deadline jobs
+
+since each job takes 1 unit time, we can do it in any time between time range (1, deadline) so for each job we loop through all possible slots and check if it is available
+
+Solved greedily
+
+
+class Solution 
+{
+    public:
+    //Function to find the maximum profit and the number of jobs done.
+    bool static compare(Job a,Job b)
+    {
+        if(a.profit==b.profit)
+            return a.dead>b.dead; // longer deadline
+        return a.profit>b.profit; // higher profit
+    }
+    vector<int> JobScheduling(Job arr[], int n) 
+    { 
+        // your code here
+        int max_dead = INT_MIN,count=0,profit=0;
+        for(int i=0;i<n;i++)
+            max_dead = max(max_dead,arr[i].dead);
+        sort(arr,arr+n,compare);
+        vector<int> slots(max_dead+1,0);
+        for(int i=0;i<n;i++)
+        {
+            Job job = arr[i];
+            for(int j=job.dead;j>=1;j--)
+            {
+                if(slots[j]==0)
+                {
+                    slots[j]=1;
+                    count++;
+                    profit += job.profit;
+                    cout<<job.id<<" "<<j<<" "<<job.dead<<" "<<job.profit<<endl;
+                    break;
+                }
+            }
+        }
+        
+        return {count,profit};
+    } 
+};
+
+
+
+  // } Driver Code Ends

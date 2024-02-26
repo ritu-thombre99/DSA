@@ -1,0 +1,36 @@
+Given an array of digits (values are from 0 to 9), find the minimum possible sum of two numbers formed from digits of the array. All digits of given array must be used to form the two numbers.
+
+Method 1 - Create min heap and keep popping elements
+
+class Solution{
+    public:
+    long long int minSum(int arr[], int n)
+    {
+        // Your code goes here
+        long long int d1 = 0, d2=0;
+        priority_queue<int, vector<int>, greater<int>> pq;
+        for(int i=0;i<n;i++)
+            pq.push(arr[i]);
+        while(!pq.empty())
+        {
+            d1 = d1*10 + pq.top();
+            pq.pop();
+            if(!pq.empty())
+            {
+                d2 = d2*10 + pq.top();
+                pq.pop();
+            }
+        }
+        // cout<<d1<<' '<<d2<<endl;
+        return d1+d2;
+    }
+};
+
+Method 2 - sorting
+better space complexity as no extra space is required
+only sorting
+
+sort array
+create two digits using even and odd indices
+
+both have nlogn complexity

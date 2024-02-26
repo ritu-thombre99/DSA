@@ -1,0 +1,69 @@
+K closest numbers in unsorted array
+
+Lucy lives in house number X. She has a list of N house numbers in the society. Distance between houses can be determined by studying the difference between house numbers. Help her find out K closest neighbors.
+Note: If two houses are equidistant and Lucy has to pick only one, the house with the smaller house number is given preference.
+
+
+Method 1 - build heap of all elements using difference between X and array elements
+Complexity 0(NlogN)
+class Solution{
+    public:
+    struct Comparator
+    {
+        bool operator()(pair<int,int> a,pair<int,int> b)
+        {
+            if(a.second == b.second)
+                return a.first>b.first;
+            else
+                return a.second>b.second;
+        }
+    };
+    vector<int> Kclosest(vector<int>arr, int n, int x, int k) 
+    { 
+        // Your code goes here 
+        priority_queue<pair<int,int>,vector<pair<int,int>>,Comparator> pq;
+        for(int i=0;i<arr.size();i++)
+            pq.push({arr[i],abs(x-arr[i])});
+        vector<int> v;
+        while(!pq.empty() && k--)
+        {
+            v.push_back(pq.top().first);
+            pq.pop();
+        }
+        sort(v.begin(),v.end());
+        return v;
+    }  
+};
+
+Method 2 - Better approach
+Max heap of first K elements
+If elements from K+1 to N have difference <= current top of the queue 
+pop top of queue and insert it into queue
+
+class Solution{
+    public:
+    vector<int> Kclosest(vector<int>arr, int n, int x, int k) 
+    { 
+        // Your code goes here 
+        priority_queue<pair<int,int>> pq;
+        for(int i=0;i<k;i++)
+            pq.push({abs(x-arr[i]),i});
+        for(int i=k;i<arr.size();i++)
+        {
+            int curr_dif = pq.top().first;
+            int new_diff = abs(x-arr[i]);
+            if(new_diff <= curr_dif)
+            {
+                pq.pop();
+                pq.push({new_diff,i});
+            }
+        }
+        vector<int> v;
+        while(!pq.empty() && k--)
+        {
+            v.push_back(arr[pq.top().second]);
+            pq.pop();
+        }
+        return v;
+    }  
+};

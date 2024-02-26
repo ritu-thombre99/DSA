@@ -1,0 +1,96 @@
+'''
+/**
+Given an HTML as a string, validate if its a syntactically valid HTML or not? 
+Eg:
+
+Input: String = “<html><head>name</head><body>Hello<br>World</body></html>”
+  Output: true.
+  
+Input: String = “<html><xy>name</xy></html>”
+  Output: false.
+  
+Input: String = “<html><head><body>name</body></head></html>”
+  Output: false.
+  
+Input: String = “<html><head>name</head><body>name<body></html>”
+  Output: false.
+  
+Method to implement: boolean isValidHtml(String str)
+Your code should be modular & extensible for future use cases.
+
+//Sample Rules Like
+
+1. Tags should be pre-defined [example 2]
+  1.1 <html> <head> <body> <br>
+2. Opening & closing of tags in order [example 4]
+3. Priority of tags & hierarchy should be there [example 3]
+  3.1 <html> should be first tag  main_list[0]=html, main_list[-1]=/html
+  3.2 <html> can only contain <head> & <body>   
+  3.3 <head> can not contain any tag    
+  3.4 <br> can be only inside <body>
+  3.5 <body> can not contain <head> & vice versa      
+4. Non closing tags like <br> [example 1] [/br,/hr]
+
+*/
+'''
+Eg#3
+main_list = [html,head,body,/body,/head,/html]
+
+
+Eg#2
+main_list = [html,xy,/xy,/html]
+
+
+Eg#1
+main_list = [html,head,/head,body,br,/body,/html]
+
+
+<html> <head>name</head > <body> Hello World <div> test div </div></body></html>
+
+html -> [head, body]
+head -> []
+body -> [br]
+
+<html><head>name</head><body>Hello<br>World</body></html><br>
+
+unordered_map<string, vector<string>> children;
+
+def isValidHtml(S):
+    # Rule 3.1
+    if S.startswith('<html>') == False:
+        return False
+    if S[-7:-1] != '</html>':
+        return false
+    # extract tags and rule 1
+    maint_list = []
+    i=0
+    allowed_tags = ['html','head','body','br','/html','/head','/body']
+    while(i<len(S)):
+        if S[i]=='<':
+            tag = ''
+            j=i+1
+            while S[j]!='>' and j<len(S):
+                if S[j]=='<' || j>=len(S): #<html # <html<head
+                    return False
+                if S[j]=='>'
+                    break
+                tag = tag + S[j] 
+                j=j+1
+            if tag not in main_list:
+                return False
+            main_list.append(tag)
+        else:
+            i=i+1
+    # rule 2
+    stk = []
+    for tag in main_list:
+        if tag not in exceptions_to_close_tag: and tag[0]=='<' and tag[1]!='/':
+            stk.push(tag)
+        else:
+            elif stk[0] != 
+        
+    
+    
+</html> 
+        
+        

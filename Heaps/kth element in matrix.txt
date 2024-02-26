@@ -1,0 +1,28 @@
+Given a N x N matrix, where every row and column is sorted in non-decreasing order. Find the kth smallest element in the matrix.
+
+struct Comparator{
+    bool operator()(pair<pair<int,int>,int> a, pair<pair<int,int>,int> b){
+        return a.second > b.second;
+    }
+};
+int kthSmallest(int arr[MAX][MAX], int n, int k)
+{
+  //Your code here
+    priority_queue<pair<pair<int,int>,int>,vector<pair<pair<int,int>,int>>,Comparator> pq;
+    for(int i=0;i<n;i++)
+        pq.push({{i,0},arr[i][0]});
+    int count = 1;
+    while(!pq.empty())
+    {
+        pair<pair<int,int>,int> temp = pq.top();
+        pq.pop();
+        if(count == k)
+            return temp.second;
+        pair<int,int> index = temp.first;
+        if(index.second+1<n)
+            pq.push({{index.first,index.second+1},arr[index.first][index.second+1]});
+        count = count+1;
+    }
+    return -1;
+  
+}

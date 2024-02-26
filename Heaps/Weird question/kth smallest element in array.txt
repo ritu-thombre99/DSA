@@ -1,0 +1,54 @@
+kth smallest element in array
+
+1. Using max heap
+
+create max heap of k elements
+1st largest element (root of heap) is kth smallest element (of heap of size k) 
+
+complexity - n+klogn
+class Solution{
+    public:
+    int kthSmallest(int arr[], int l, int r, int k) {
+        //code here
+        priority_queue<int> q;
+        for(int i=l;i<l+k;i++)
+            q.push(arr[i]);
+        for(int i=l+k;i<=r;i++)
+        {
+            if(arr[i] < q.top())
+            {
+                q.pop();
+                q.push(arr[i]);
+            }
+        }
+        return q.top();
+    }
+};
+2. Using min heap - NlogN
+build heap
+pop till k--
+
+2. using set
+
+set uses binary search tree internally
+so finding kth largest only takes logN to find
+
+complexity - logN
+
+int main()
+{
+ 
+    int arr[] = { 12, 3, 5, 7, 19 };
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int k = 4;
+ 
+    set<int> s(arr, arr + n);
+    set<int>::iterator itr
+        = s.begin(); // s.begin() returns a pointer to first
+                     // element in the set
+    advance(itr, k - 1); // itr points to kth element in set
+ 
+    cout << *itr << "\n";
+ 
+    return 0;
+}

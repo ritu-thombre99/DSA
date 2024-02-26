@@ -1,0 +1,61 @@
+Given K sorted lists of integers, KSortedArray[] of size N each. The task is to find the smallest range that includes at least one element from each of the K lists. If more than one such range's are found, return the first such range found.
+
+Push first elements from all K sorted arrays to a min heap (along with ther position i.e row and column)
+also keep track of maximum among these -> max
+minimum will always be stored at the top of queue
+
+keep track of min_range = max-min
+start loop
+	1. pop topelement i.e -> min
+	2. caclulate max-min and see if it is less than current min_range (if it is then stor {min,max} and min_range = max-min)
+	3. find the element next to current popped element (i.e row, col+1)
+	4. if col+1 >= n (i.e we have exhausted through one of the list) break out of the loop
+	5. else see if array[row][col+1] is greater than current max (f it is then assign it to max)
+
+Complexity - priority queue of size k therefore (front and top) takes logk time
+	     and to traverse all the k arrays of length n (in worst case), the time complexity is O(n*k), then the total time complexity is O(n * k *log k).
+
+class Solution{
+    public:
+    struct Comparator1{
+        bool operator()(pair<pair<int,int>,int> a, pair<pair<int,int>,int> b)
+        {
+            return a.second>b.second;
+        }
+    };
+    pair<int,int> findSmallestRange(int KSortedArray[][N], int n, int k)
+    {
+          //code here
+        priority_queue<pair<pair<int,int>,int>,vector<pair<pair<int,int>,int>>,Comparator1> min_pq;
+        int max = INT_MIN;
+        for(int i=0;i<k;i++)
+        {
+            min_pq.push({{i,0},KSortedArray[i][0]});
+            if(KSortedArray[i][0] > max)
+                max = KSortedArray[i][0];
+        }
+        int min_range = INT_MAX;
+        pair<int,int> range;
+        while(true)
+        {
+            pair<pair<int,int>,int> min_pair = min_pq.top();
+            min_pq.pop();
+            
+            pair<int,int> min_index = min_pair.first;
+            int min = min_pair.second;
+            if(max-min < min_range)
+            {
+                min_range = (max-min);
+                range = {min,max};
+            }
+            int i = min_index.first;
+            int j = min_index.second;
+            if(j+1 >= n)
+                break;
+            min_pq.push({{i,j+1}, KSortedArray[i][j+1]});
+            if(KSortedArray[i][j+1] > max)
+                max = KSortedArray[i][j+1];
+        }
+        return range;
+    }
+};

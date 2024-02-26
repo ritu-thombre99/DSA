@@ -1,0 +1,30 @@
+class Solution
+{
+    public:
+    
+    Node* copyNext(Node *head,unordered_map<Node*,Node*> &m)
+    {
+        if(!head)
+            return NULL;
+        Node *node = new Node(head->data);
+        m[head] = node;
+        node->next = copyNext(head->next,m);
+        return node;
+    }
+    void copyArb(Node *head, Node *clone_head, unordered_map<Node*,Node*> m)
+    {
+        if(!head)
+            return;
+        (clone_head)->arb = m[head->arb];
+        copyArb(head->next, clone_head->next,m);
+    }
+    Node *copyList(Node *head)
+    {
+        //Write your code here
+        unordered_map<Node*,Node*> m;
+        Node *clone = copyNext(head,m);
+        copyArb(head,clone,m);
+        return clone;
+    }
+
+};

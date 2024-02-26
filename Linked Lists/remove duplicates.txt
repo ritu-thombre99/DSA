@@ -1,0 +1,30 @@
+struct Node* removeAllDuplicates(struct Node* head)
+{
+    //code here
+    struct Node* ptr = head;
+    struct Node* prev = NULL;
+    while(ptr && ptr->next)
+    {
+        if(ptr->data != ptr->next->data)
+        {
+            prev = ptr;
+            ptr = ptr->next;
+        }
+        else
+        {
+            while(ptr && ptr->next && ptr->data == ptr->next->data)
+                ptr->next = ptr->next->next;
+            if(prev==NULL)
+            {
+                head=head->next;
+                ptr = head;
+            }
+            else if(ptr)
+            {
+                prev->next = ptr->next;
+                ptr = ptr->next;
+            }
+        }
+    }
+    return head;
+}

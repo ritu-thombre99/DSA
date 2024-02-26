@@ -1,0 +1,60 @@
+K closest elements to X(given) in sorted array
+
+binary serach to find closest element to X
+use two pointer method to traverse left and right side together
+
+Given a sorted array, arr[] of N integers, and a value X. Find the K closest elements to X in arr[].
+Keep the following points in mind:
+
+If X is present in the array, then it need not be considered.
+If there are two elements with the same difference with X, the greater element is given priority.
+If sufficient elements are not present on the right side then take elements from left and vice versa.
+ 
+
+class Solution{   
+public:
+    int findCrossOver(vector<int> arr, int low, int high, int x)
+    {
+        if (arr[high] <= x)
+            return high;
+        if (arr[low] > x)
+            return low;
+        
+        int mid = (low + high)/2; 
+        
+        if (arr[mid] <= x && arr[mid+1] > x)
+            return mid;
+        if(arr[mid] < x)
+            return findCrossOver(arr, mid+1, high, x);
+         
+        return findCrossOver(arr, low, mid - 1, x);
+    }
+    vector<int> printKClosest(vector<int> arr, int n, int k, int x) {
+        // code here
+        int left = findCrossOver(arr, 0, n-1, x);
+        int right = left+1; 
+        vector<int> v;
+        if (arr[left] == x) 
+            left = left-1;
+        int count = 0;
+        while (left >= 0 && right < n && count < k)
+        {
+            if (x - arr[left] < arr[right] - x)
+                v.push_back(arr[left--]);
+            else
+                v.push_back(arr[right++]);
+            count++;
+        }
+        while (count < k && left >= 0)
+        {
+            v.push_back(arr[left--]);
+            count++;
+        }
+        while (count < k && right < n)
+        {
+            v.push_back(arr[right++]);
+            count++;
+        }
+        return v;
+    }
+};

@@ -1,0 +1,55 @@
+void addElement(priority_queue<int> & A, int x)
+{
+    //your code here
+    A.push(x);
+}
+
+/* remove top element from 
+the priority queue*/
+void remove_Element(priority_queue<int> &A)
+{
+    //your code here
+    if (A.empty()) {
+        cout << -1 << '\n';
+    } else {
+        cout << A.top() << '\n';
+        A.pop();
+    }
+}
+
+/*  returns the top element 
+of the priority queue*/
+int getElement_at_top(priority_queue<int> &A)
+{
+    //your code here
+    return A.empty() ? -1 : A.top();
+}
+
+/* returns the size of
+the priority queue*/
+int getSize(priority_queue<int> &A)
+{
+    //your code here
+    return A.empty() ? -1 : A.size();
+}
+
+/* prints the element in 
+the priority queue*/
+void print(priority_queue<int> &A)
+{
+    //your code here
+    if (A.empty()) {
+        cout << -1 << '\n';
+    } else {
+        vector<int> temp;
+        while (!A.empty()) {
+            temp.push_back(A.top());
+            cout << A.top() << " ";
+            A.pop();
+        }
+        cout << '\n';
+        for (auto &itr:temp) {
+            A.push(itr);
+        }
+    }
+}

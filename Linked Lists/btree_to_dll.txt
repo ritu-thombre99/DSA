@@ -1,0 +1,85 @@
+// inefficient solution
+
+class Solution
+{
+    public: 
+    //Function to convert binary tree to doubly linked list and return it.
+    void flatten(Node **root)
+    {
+        if(!(*root))
+            return;
+        if( !((*root)->left) && !((*root)->right) )
+            return;
+        flatten( &((*root)->left) );
+        Node *right = (*root)->right;
+        Node *left = (*root)->left;
+        (*root)->right = NULL;
+        if(right)
+        {
+            Node *left_most = right;
+            while(left_most && left_most->left)
+                left_most = left_most->left;
+            left_most->left = (*root);
+            (*root) = right;
+            flatten(root);
+        }
+        // flatten( &((*root)->right) );
+    }
+    Node* bToDLL(Node *root)
+    {
+        // your code here
+        if(!root)
+            return NULL;
+        flatten(&root);
+        // cout<<"First:"<<root->data<<endl;
+        if(root->left==NULL)
+            return root;
+        Node *ptr1 = (root);
+        Node *ptr2 = (root)->left;
+        while(ptr2!=NULL)
+        {
+            // cout<<ptr1->data<<" ";
+            ptr2->right = ptr1;
+            ptr1 = ptr1->left;
+            ptr2 = ptr2->left;
+        }
+        return ptr1;
+        
+    }
+};
+
+\\ efficient solution
+
+void fixPrevPtr(node *root) 
+{ 
+    static node *pre = NULL; 
+
+    if (root != NULL) 
+    { 
+        fixPrevPtr(root->left); 
+        root->left = pre; 
+        pre = root; 
+        fixPrevPtr(root->right); 
+    } 
+} 
+
+node *fixNextPtr(node *root) 
+{ 
+    node *prev = NULL; 
+
+    while (root && root->right != NULL) 
+        root = root->right; 
+    while (root && root->left != NULL) 
+    { 
+        prev = root; 
+        root = root->left; 
+        root->right = prev; 
+    } 
+    return (root); 
+} 
+
+node *BTToDLL(node *root) 
+{ 
+    fixPrevPtr(root); 
+    return fixNextPtr(root); 
+} 

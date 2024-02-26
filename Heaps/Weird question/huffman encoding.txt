@@ -1,0 +1,65 @@
+huffman encoding - used for data encoding
+log(N) where N is length of string
+characters with lowest frequcny are alloted higher length string encodings
+performed using min heap
+extract to minimum frequencies and make them left and right child of new root node
+add then and add new freq to new root and push to min heap
+keep repeating untill heap size becomes 1
+
+
+class Solution
+{
+	public:
+	    struct Node {
+	        int freq;
+	        struct Node *left,*right;
+	        Node(int f)
+	        {
+	            freq = f;
+	            left=right=NULL;
+	            
+	        }
+	    };
+	    struct Comparator{
+	        bool operator()(Node *a,Node *b)
+	        {
+	            return a->freq>b->freq;
+	        }
+	    };
+	    void preorder(Node *root, vector<string> &v, string s)
+	    {
+	        if(!root)
+	            return;
+            if(!root->left && !root->right)
+                v.push_back(s);
+            preorder(root->left,v,s+"0");
+            preorder(root->right,v,s+"1");
+	    }
+		vector<string> huffmanCodes(string S,vector<int> f,int N)
+		{
+		    // Code here
+		    priority_queue<Node*,vector<Node*>,Comparator> pq;
+		    for(int i=0;i<N;i++)
+		    {
+		        Node *leaf = new Node(f[i]);
+		        pq.push(leaf);
+		    }
+		    while(pq.size()>1)
+		    {
+		        Node *left = pq.top();
+		        pq.pop();
+		        Node *right = pq.top();
+		        pq.pop();
+		        int new_freq = left->freq + right->freq;
+		        Node *root = new Node(new_freq);
+		        root->left = left;
+		        root->right = right;
+		        pq.push(root);
+		    }
+		    Node *root = pq.top();
+		    pq.pop();
+		    vector<string> v;
+		    preorder(root,v,"");
+		    return v;
+		}
+};

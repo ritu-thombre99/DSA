@@ -1,0 +1,65 @@
+Given a singly linked list: A0→A1→…→An-1→An, reorder it to: A0→An→A1→An-1→A2→An-2→…
+For example: Given 1->2->3->4->5 its reorder is 1->5->2->4->3.
+
+Node* reverse(Node *head)
+{
+    Node *prev = NULL;
+    Node *mid = head;
+    while(head)
+    {
+        head = head->next;
+        mid->next = prev;
+        prev = mid;
+        mid = head;
+    }
+    return prev;
+}
+Node* util(Node *left, Node *right)
+{
+    if(!left && !right)
+        return NULL;
+    right = reverse(right);
+    Node *ptr1 = left;
+    Node *ptr2 = right;
+    Node *prev = NULL;
+    while(ptr1 && ptr2)
+    {
+        Node *next = ptr1->next;
+        Node *to_insert = ptr2;
+        ptr2 = ptr2->next;
+        
+        ptr1->next = to_insert;
+        to_insert->next = next;
+        if(ptr1 && ptr1->next)
+        {   
+            prev = ptr1->next;
+            ptr1 = ptr1->next->next;
+        }
+        else
+            break;
+    }
+    if(ptr2)
+        prev->next = ptr2;
+}
+
+void reorderList(Node* head) {
+    // Your code here
+    if(!head)
+        return;
+    if(!head->next)
+        return;
+    if(!head->next->next)
+        return;
+    Node *prev = NULL;
+    Node *slow = head;
+    Node *fast = head;
+    while(fast && fast->next)
+    {
+        prev = slow;
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    prev->next = NULL;
+    util(head, slow);
+    
+}

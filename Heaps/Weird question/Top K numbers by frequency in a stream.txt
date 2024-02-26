@@ -1,0 +1,37 @@
+Given N numbers in an array. Your task is to keep at-most K numbers at the top (According to their frequency).  We basically need to print top k numbers when input stream has included k distinct elements, else need to print all distinct elements sorted by frequency.
+
+Complexity - O(nk)
+use map to store elements and their frequency
+for each element start with maximum freqency encountered untill now and traverse map untill k elements are pirnted by decrementing max_freq and k
+
+class Solution
+{
+  public:
+    vector<int> kTop(int arr[], int n, int k) 
+    { 
+        //code here.
+        vector<int>v;
+        map<int,int>m;
+        int max_freq=0;
+        for(int i=0;i<n;i++)
+        {
+            m[arr[i]]++;
+            if(max_freq<m[arr[i]])
+                max_freq = m[arr[i]];
+            int freq=max_freq;
+            int j=0;
+        
+            while(freq!=0 && j!=k){
+                for(auto x:m){
+                    if(x.second==freq){
+                        v.push_back(x.first);
+                        j++; 
+                        if(j==k) break;
+                    } 
+                }
+                freq--;
+            }
+        }
+        return v;
+    }
+};

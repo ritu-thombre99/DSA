@@ -1,0 +1,19 @@
+int countTriplets(struct Node* head, int x) 
+{ 
+    // code here.
+    int count = 0;
+    unordered_map<int,bool> mp;
+    mp[head->data] = true;
+    Node *p,*q;
+    for(p=head->next;p!=NULL;p=p->next)
+    {
+        for(q=p->next;q!=NULL;q=q->next)
+        {
+            int  twin_sum = x-(p->data+q->data);
+            if(mp[twin_sum] == true)
+                count = count + 1;
+        }
+        mp[p->data] = true;
+    }
+    return count;
+} 

@@ -1,0 +1,42 @@
+You are given an array Arr of size N. You have to find the K-th largest sum of contiguous subarray within the array elements.
+
+Complexity - O(n^2)
+
+Idea - Make prefix sum subarray i.e sum[i] will store sum of elements from arr[0] to arr[i-1]
+
+Then traverse sum array using nested loop to get contiguous sum from 1<=i=<j<N
+Maintain min heap of size k (Kth largest i.e 1st smallest among K elements will be at the top)
+
+if sum from (i,j) is less than current top, pop top and add this new minimum
+
+class Solution{
+public:
+    int kthLargest(vector<int> &arr,int N,int K){
+        int sum[N + 1];
+        sum[0] = 0;
+        sum[1] = arr[0];
+        for (int i = 2; i <= N; i++)
+            sum[i] = sum[i - 1] + arr[i - 1];
+        priority_queue<int, vector<int>, greater<int> > Q;
+    
+        for (int i = 1; i <= N; i++)
+        {
+            for (int j = i; j <= N; j++)
+            {
+                int x = sum[j] - sum[i - 1];
+                if (Q.size() < K)
+                    Q.push(x);
+                else
+                {
+                    if (Q.top() < x)
+                    {
+                        Q.pop();
+                        Q.push(x);
+                    }
+                }
+            }
+        }
+        return Q.top();
+        
+    }
+};

@@ -1,0 +1,28 @@
+remove k elements with higher frequency
+
+const int MAX_CHAR = 26;
+class Solution{
+public:
+    int minValue(string s, int k){
+        // code here
+        priority_queue<int> pq;
+        int frequency[MAX_CHAR] = {0};
+        for(int i=0;i<s.size();i++)
+            frequency[s[i]-'a']++;
+        for(int i=0;i<MAX_CHAR;i++)
+            pq.push(frequency[i]);
+        while (k--) {
+            int temp = pq.top();
+            pq.pop();
+            temp = temp - 1;
+            pq.push(temp);
+        }
+        int result = 0; 
+        while (!pq.empty()) {
+            int temp = pq.top();
+            result += temp * temp;
+            pq.pop();
+        }
+        return result;
+    }
+};

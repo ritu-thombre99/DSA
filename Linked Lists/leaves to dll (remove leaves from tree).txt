@@ -1,0 +1,84 @@
+Time complexity = O(n)
+space complexity = O(n)
+Node * convertToDLL(Node *&root){
+    // add code here.
+    unordered_map<Node*,pair<Node*,char>> mp;
+    stack<Node*> s;
+    s.push(root);
+    Node* head = NULL;
+    Node *tail = NULL;
+    vector<Node*> v;
+    while(!s.empty())
+    {
+        Node *node = s.top();
+        s.pop();
+        Node *left = node->left;
+        Node *right = node->right;
+        if(right)
+        {
+            mp[right] = make_pair(node,'R');
+            s.push(right);
+        }
+        if(left)
+        {
+            mp[left] = make_pair(node,'L');
+            s.push(left);
+        }
+        
+        if(node->left == NULL && node->right==NULL)
+            v.push_back(node);
+    }
+    
+    for(int i=0;i<v.size();i++)
+    {
+        // cout<<v[i]->data<<" ";
+        Node *node = v[i];
+        pair<Node*,char> temp = mp[node];
+        Node *parent = temp.first;
+        if(temp.second == 'L')
+            parent->left = NULL;
+        else
+            parent->right = NULL;
+        if(head!=NULL)
+        {
+            node->left = tail;
+            tail->right = node;
+            tail=tail->right;
+        }
+        else
+        {
+            head = node;
+            tail = node;
+        }
+    }
+    // cout<<endl;
+    return head;
+
+}
+
+\\ space efficient solution
+Time complexity = O(n)
+space = O(1)
+
+
+Node* extractLeafList(Node *root, Node **head_ref)
+{
+if (root == NULL) return NULL;
+ 
+if (root->left == NULL && root->right == NULL)
+{
+    root->right = *head_ref;
+    if (*head_ref != NULL) 
+	(*head_ref)->left = root;
+    *head_ref = root;
+    return NULL; 
+}
+ 
+
+root->right = extractLeafList(root->right, head_ref);
+root->left = extractLeafList(root->left, head_ref);
+ 
+return root;
+}
+
+root = extractLeafList(root, &head);
